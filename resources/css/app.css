@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.gradient {
+    background: #667db6; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to bottom right,
+        #667db6,
+        #0082c8,
+        #0082c8,
+        #667db6
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to right,
+        #667db6,
+        #0082c8,
+        #0082c8,
+        #667db6
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.lightBackground {
+    @apply bg-gradient-to-tl from-blue-500 via-blue-600 to-blue-700;
+}
+
+.darkBackground {
+    @apply bg-gradient-to-tl dark:from-gray-950 dark:via-gray-900 dark:to-gray-800;
+}
+.transisiAktif {
+    @apply duration-300 transition-all ease-in-out;
+}
+
+.btn-primary {
+    @apply py-1 px-2 rounded-md text-xs md:text-sm hover:bg-blue-700 transisiAktif active:bg-blue-700 bg-blue-600 text-white font-light;
+}
+.btn-warning {
+    @apply py-1 px-2 rounded-md text-xs md:text-sm hover:bg-yellow-700 transisiAktif active:bg-yellow-700 bg-yellow-600 text-white font-light;
+}
+.btn-danger {
+    @apply py-1 px-2 rounded-md text-xs md:text-sm hover:bg-red-500 transisiAktif active:bg-red-700 bg-red-600 text-white font-light;
+}
+.btn-success {
+    @apply py-1 px-2 rounded-md text-xs md:text-sm hover:bg-green-500 transisiAktif active:bg-green-700 bg-green-600 text-white font-light;
+}
