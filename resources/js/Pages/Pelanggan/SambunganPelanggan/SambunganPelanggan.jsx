@@ -5,9 +5,11 @@ import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import Form from "./Form";
 import { Link } from "@inertiajs/react";
+import ShowPemasanganBaru from "./ShowPemasanganBaru";
 
 export default function SambunganPelanggan(props) {
     const pemasanganBaru = props.pemasanganBaru;
+    const [model, setModel] = useState(null);
     const columns = [
         {
             name: "#",
@@ -58,33 +60,50 @@ export default function SambunganPelanggan(props) {
             wrap: true,
         },
         {
+            name: "Status Pembayaran",
+            selector: (row) => row.status_pembayaran,
+            width: "170px",
+            wrap: true,
+        },
+        {
             name: "Aksi",
             selector: (row) => (
-                <div className="flex gap-3 items-center">
-                    <button className="btn-primary">Lihat Tagihan</button>
-                    <Link
-                        href={route(
-                            "pelanggan.remove-sambungan-pelanggan",
-                            row.id
-                        )}
-                        className="btn-danger"
-                    >
-                        Hapus Sambungan
-                    </Link>
+                <div>
+                    <div className="flex gap-3 items-center">
+                        <button
+                            className="btn-primary"
+                            onClick={() => lihatHandler(row)}
+                        >
+                            Lihat Tagihan
+                        </button>
+                        <Link
+                            href={route(
+                                "pelanggan.remove-sambungan-pelanggan",
+                                row.id
+                            )}
+                            className="btn-danger"
+                        >
+                            Hapus Sambungan
+                        </Link>
+                    </div>
                 </div>
             ),
         },
     ];
     const [modalTambah, setModalTambah] = useState(false);
-
+    const [modalLihat, setModalLihat] = useState(false);
+    const lihatHandler = (row) => {
+        setModalLihat(true);
+        setModel(row);
+    };
     return (
         <div className="py-6">
             <Modal
-                open={modalTambah}
-                setOpen={setModalTambah}
-                title={"Penambahan Meteran Saya"}
+                open={modalLihat}
+                setOpen={setModalLihat}
+                title={"Lihat Detail PDAM"}
             >
-                <Form />
+                <ShowPemasanganBaru id={model && model.id} />
             </Modal>
 
             <div className="flex justify-between">

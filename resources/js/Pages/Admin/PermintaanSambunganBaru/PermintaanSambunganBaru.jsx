@@ -116,15 +116,6 @@ export default function PermintaanSambunganBaru(props) {
             <div className="shadow-md my-3 py-2 shadow-gray-900/20 dark:shadow-white/10 antialiased px-3 rounded-md">
                 <div className="flex flex-col md:flex-row justify-start md:justify-between items-start md:items-center gap-3">
                     <div className="flex items-center gap-x-3">
-                        <button
-                            onClick={() => setModalTambah(true)}
-                            className="btn-primary flex gap-x-1 items-center"
-                        >
-                            <p>
-                                <Add color="inerit" fontSize="inherit" />
-                            </p>
-                            <p>Tambah</p>
-                        </button>
                         <button className="btn-warning flex gap-x-1 items-center">
                             <p>
                                 <Print color="inerit" fontSize="inherit" />

@@ -1,4 +1,5 @@
 import Input from "@/Components/Input";
+import GuestLayout from "@/Layouts/GuestLayout";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import React from "react";
 
@@ -59,3 +60,5 @@ export default function Login() {
         </div>
     );
 }
+
+Login.layout = (page) => <GuestLayout children={page} />;

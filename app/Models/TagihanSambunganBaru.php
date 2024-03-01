@@ -13,4 +13,9 @@ class TagihanSambunganBaru extends Model
     {
         return $this->belongsTo(PemasanganBaru::class);
     }
+
+    public function invoices()
+    {
+        return $this->hasOne(InvoiceTagihanPemasnganBaru::class, 'tagihan_sambungan_id');
+    }
 }

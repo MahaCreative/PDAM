@@ -13,24 +13,27 @@ class SettingAppsController extends Controller
         $profile = SettingProfile::first();
         return inertia('SuperAdmin/SettingApplikasi/SettingApplikasi', compact('profile'));
     }
-    public function store(Request $request)
+    public function updateFoto(Request $request)
     {
 
-        return;
-    }
-    public function sow(Request $request)
-    {
-        dd($request->all());
-        return;
+        $setting = SettingProfile::findOrFail(1);
+        $foto = $request->file('foto')->store('setting profiles');
+        $setting->update([
+            'logo_perusahaan' => $foto
+        ]);
+        return redirect()->back()->with(['type' => 'success', 'message' => 'berhasil memperbaharui profile perusahaan']);
     }
     public function update(Request $request)
     {
-        dd($request->all());
-        return;
-    }
-    public function delete(Request $request)
-    {
-        dd($request->all());
-        return;
+
+        $attr = $request->validate([
+            'nama_perusaaan' => ['required', 'string'],
+            'email_perusahaan' => ['required', 'string', 'email'],
+            'telp_perusahaan' => ['required', 'numeric', 'min:12'],
+            'alamat_perusahaan' => ['required', 'string'],
+        ]);
+        $setting = SettingProfile::findOrFail(1);
+        $setting->update($attr);
+        return redirect()->back()->with(['type' => 'success', 'message' => 'berhasil memperbaharui profile perusahaan']);
     }
 }

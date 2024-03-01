@@ -21,12 +21,11 @@ export default function MenuPelanggan() {
                 title={"History Pembayaran"}
                 icon={<WidgetsIcon color="inerit" fontSize="inherit" />}
             />
+
             <MenuLink
-                title={"History Pemakaian Air"}
-                icon={<WidgetsIcon color="inerit" fontSize="inherit" />}
-            />
-            <MenuLink
-                title={"Pengaduan"}
+                href={route("pelanggan.pengaduan-pelanggan")}
+                active={"pelanggan.pengaduan-pelanggan"}
+                title={"Layanan Pelanggan"}
                 icon={<Report color="inerit" fontSize="inherit" />}
             />
         </div>

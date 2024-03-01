@@ -19,7 +19,7 @@ class SettingProfileSeeder extends Seeder
             'alamat_perusahaan' => 'Jl ini Alamat Ini Kelurahan Ini',
             'email_perusahaan' => 'perusahaan@gmail.com',
             'telp_perusahaan' => '082194259899',
-            'logo_perusahaan' => 'Image/preview_image.jpg',
+            'logo_perusahaan' => 'Image/default_logo.png',
         ]);
     }
 }

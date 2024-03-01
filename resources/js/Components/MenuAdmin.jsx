@@ -21,6 +21,12 @@ export default function MenuAdmin() {
                 <MenuSidebar.MenuLink href={route("admin.setting-apps")}>
                     Profile Perusahaan
                 </MenuSidebar.MenuLink>
+                <MenuSidebar.MenuLink href={route("admin.jenis-pengaduan")}>
+                    Jenis Pengaduan
+                </MenuSidebar.MenuLink>
+                <MenuSidebar.MenuLink href={route("admin.data-bank")}>
+                    Data Bank Perusahaan
+                </MenuSidebar.MenuLink>
                 <MenuSidebar.MenuLink href={route("admin.wilayah")}>
                     Data Wilayah
                 </MenuSidebar.MenuLink>
@@ -56,6 +62,9 @@ export default function MenuAdmin() {
                     href={route("admin.pengajuan-pemasangan-baru")}
                 >
                     Pemasangan Baru
+                </MenuSidebar.MenuLink>
+                <MenuSidebar.MenuLink href={route("admin.pengaduan-pelanggan")}>
+                    Pengaduan Lainnya
                 </MenuSidebar.MenuLink>
             </MenuSidebar>
         </div>

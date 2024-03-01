@@ -14,6 +14,7 @@ use App\Models\TagihanBulanan;
 use App\Models\User;
 use Database\Factories\TagihanBulananFactory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
@@ -56,6 +57,23 @@ class DatabaseSeeder extends Seeder
             'user_id' => $user->id,
             'nama' => 'Petugas Lapangan 1',
             'no_hp' => '082194255717',
+        ]);
+        DB::table('banks')->insert([
+            [
+                'nama_bank' => 'BRI',
+                'nama_rek' => 'BTN TIRTA ABADI',
+                'no_rek' => '0218-01-01-7583',
+            ],
+            [
+                'nama_bank' => 'BTN',
+                'nama_rek' => 'BTN TIRTA ABADI',
+                'no_rek' => '7589-01-01-7583',
+            ],
+            [
+                'nama_bank' => 'BNI',
+                'nama_rek' => 'BTN TIRTA ABADI',
+                'no_rek' => '0218-7583',
+            ],
         ]);
         $this->call([
             WilayahSeeder::class,

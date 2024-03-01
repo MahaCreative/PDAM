@@ -43,3 +43,17 @@
 .btn-success {
     @apply py-1 px-2 rounded-md text-xs md:text-sm hover:bg-green-500 transisiAktif active:bg-green-700 bg-green-600 text-white font-light;
 }
+
+.image-slider {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+.image-slider .slick-dots {
+    bottom: -30px;
+}
+.image-slider img {
+    max-width: 100%;
+    height: auto;
+    margin: auto;
+}

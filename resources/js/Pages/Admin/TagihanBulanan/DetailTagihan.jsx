@@ -1,4 +1,6 @@
 import Modal from "@/Components/Modal";
+import Select from "@/Components/Select";
+import { router } from "@inertiajs/react";
 import { Add, Cancel } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
@@ -170,6 +172,30 @@ export default function DetailTagihan({ model, setModel, setOpen, ...props }) {
             width: "165px",
         },
         {
+            name: "Konfirmasi Pembayaran",
+            selector: (row) => (
+                <Select
+                    onChange={(e) => changeKonfirmasi(row.id, e.target.value)}
+                    classname={
+                        row.status_konfirmasi_pembayaran ==
+                        "menunggu konfirmasi"
+                            ? "bg-orange-500"
+                            : row.status_konfirmasi_pembayaran ==
+                              "telah di terima"
+                            ? "bg-green-500"
+                            : "bg-red-500"
+                    }
+                >
+                    <option selected value={row.status_konfirmasi_pembayaran}>
+                        {row.status_konfirmasi_pembayaran}
+                    </option>
+                    <option value={"telah di terima"}>Telah Di Terima</option>
+                    <option value={"Di tolak"}>Di Tolak</option>
+                </Select>
+            ),
+            width: "170px",
+        },
+        {
             name: "Status Pembayaran",
             selector: (row) => row.status_pembayaran,
             width: "170px",
@@ -195,6 +221,12 @@ export default function DetailTagihan({ model, setModel, setOpen, ...props }) {
     ];
     const kirimDataToParent = (value) => {
         props.onDataReceive(value);
+    };
+    const changeKonfirmasi = (id, value) => {
+        router.post(route("admin.konfirmasi-pembayaran"), {
+            id: id,
+            value: value,
+        });
     };
     console.log(model);
     return (

@@ -39,7 +39,9 @@ Route::get('get-wilayah', function (Request $request) {
     return response()->json($wilaya);
 });
 Route::get('lihat-pemasangan-baru/{id}', function (Request $request, $id) {
-    $lihat = PemasanganBaru::with('wilayah', 'hargaTarif', 'tagihan_pemasangan')->where('id', $id)->latest()->first();
+    $lihat = PemasanganBaru::with(['wilayah', 'hargaTarif', 'pencatatanMeter', 'tagihan_pemasangan' => function ($q) {
+        $q->with('invoices');
+    }])->where('id', $id)->latest()->first();
     return response()->json($lihat);
 });
 Route::get('data-pelanggan', function (Request $request) {
@@ -69,4 +71,9 @@ Route::get('get-meteran', function (Request $request) {
     $pemasangan = PemasanganBaru::where('kode_pemasangan_baru', '=', $request->kode_sambungan)
         ->where('no_sambungan', '=', $request->no_sambungan)->latest()->first();
     return response()->json($pemasangan);
+});
+
+Route::get('get-tagihan-by-meteran/{id}', function ($id) {
+    $tagihanBulanan = TagihanBulanan::where('pemasangan_baru_id', $id)->latest()->get();
+    return response()->json($tagihanBulanan);
 });

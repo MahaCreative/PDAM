@@ -30,5 +30,11 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'midtrans' => [
+        'merchat_id' => env('MIDTRANS_MERCHANT_ID', 'G345265920'),
+        'client_id' => env('MIDTRANS_CLIENT_ID', 'SB-Mid-client-ayIaH2wVUN3c7ikx'),
+        'server_key' => env('MIDTRANS_SERVER_KEY', 'SB-Mid-server-fBV_TJMXN7Nm8oK7WY2EMUfm'),
+
+    ]
 
 ];

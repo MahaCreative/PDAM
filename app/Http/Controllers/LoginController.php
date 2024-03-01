@@ -21,12 +21,13 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             // Autentikasi berhasil
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard')->with(['type' => 'success', 'message' => 'Anda berhasil login']);
         }
+        return redirect()->route('dashboard')->with(['type' => 'error', 'message' => 'mungkin email atau password salah']);
     }
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('login');
+        return redirect()->route('login')->with(['type' => 'success', 'message' => 'Anda berhasil logout']);
     }
 }

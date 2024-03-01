@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Pelanggan;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bank;
+use App\Models\InvoiceTagihanPemasnganBaru;
 use App\Models\PemasanganBaru;
 use App\Models\PermintaanSambunganBaru;
+use App\Models\TagihanSambunganBaru;
 use Illuminate\Http\Request;
 
 class SambunganPelangganController extends Controller
@@ -48,5 +51,74 @@ class SambunganPelangganController extends Controller
             $permintaan->delete();
         }
         return redirect()->back()->with(['type' => 'success', 'message' => 'Berhasil menghapus hubungan meteran dengan akun anda. kini anda tidak lagi dapat meliat data terkait meteran tersebut']);
+    }
+
+    public function lihat_tagihan(Request $request, $id)
+    {
+        $bank = Bank::all();
+        $pemasanganBaru = PemasanganBaru::with('tagihan_pemasangan')->findOrFail($request->id);
+        return inertia('Pelanggan/PembayaranSambunganPelanggan/PembayaranSambungan', compact('pemasanganBaru', 'bank'));
+    }
+
+    public function bayar_tagihan(Request $request)
+    {
+
+        $request->validate([
+            'nama_bank_pdam' => 'required',
+            'nama_rek_pdam' => 'required',
+            'no_rek_pdam' => 'required',
+            'nama_bank_pengirim' => 'required',
+            'nama_rek_pengirim' => 'required',
+            'no_rek_pengirim' => 'required',
+            'bukti_pembayaran' => 'required|mimes:jpg,jpeg,png',
+        ]);
+        // dd($request->all());
+        $tagihan = TagihanSambunganBaru::findOrFail($request->id_tagihan);
+
+        $order_id = now()->format('dmy') . $tagihan->id . $request->user()->id . $tagihan->pemasangan_baru_id;
+        $paymenth_info = [
+            'nama_bank_pdam' => $request->nama_bank_pdam,
+            'nama_rek_pdam' => $request->nama_rek_pdam,
+            'no_rek_pdam' => $request->no_rek_pdam,
+            'nama_bank_pengirim' => $request->nama_bank_pengirim,
+            'nama_rek_pengirim' => $request->nama_rek_pengirim,
+            'no_rek_pengirim' => $request->no_rek_pengirim,
+            'bukti_pembayaran' => $request->file('bukti_pembayaran')->store('bukti_pembayaran'),
+        ];
+        $json_data = json_encode($paymenth_info);
+
+        $invoince = InvoiceTagihanPemasnganBaru::updateOrCreate(compact('order_id'), [
+            'user_id' => $request->user()->id,
+            'order_id' => $order_id,
+            'total_pembayaran' => $tagihan->total_biaya,
+            'tagihan_sambungan_id' => $tagihan->id,
+            'payment_type' => 'pembayaran transfer',
+            'payment_info' => $paymenth_info,
+        ]);
+
+        return redirect()->route('pelanggan.sambungan-pelanggan')->with(['type' => 'success', 'message' => 'Form pembayaran anda telah berhasil ditambahkan, konfirmasi pembayaran akan dilakukan oleh petugas']);
+    }
+    public function konfirmasi_pembayaran(Request $request, $id)
+    {
+        dd($request->id);
+    }
+    public function delete_pembayaran_tagihan(Request $request, $id)
+    {
+        $invoice = InvoiceTagihanPemasnganBaru::findOrFail($id);
+        $tagihan = TagihanSambunganBaru::findOrFail($invoice->tagihan_sambungan_id);
+        // $tagihan->pemasangan->update([]);
+        $pemasanganBaru = PemasanganBaru::findOrFail($tagihan->pemasangan_baru_id);
+        $pemasanganBaru->update([
+            "status_pemasangan" => "menunggu konfirmasi",
+            "status_pembayaran" => "menunggu konfirmasi",
+            "nama_petugas_yang_menangani" => null,
+        ]);
+        $tagihan->update([
+            'tanggal_pembayaran' => null,
+            "status_pembayaran" => "menunggu konfirmasi",
+            "nama_petugas" => null,
+        ]);
+        $invoice->delete();
+        return redirect()->route('pelanggan.sambungan-pelanggan')->with(['type' => 'success', 'message' => 'Bukti pembayaran telah di hapus, silakan melakukan pengajuan bukti pembayaran ulang']);
     }
 }

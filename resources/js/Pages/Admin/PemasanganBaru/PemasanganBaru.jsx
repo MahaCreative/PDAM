@@ -15,7 +15,7 @@ import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import Form from "./Form";
 import SearchPelanggan from "@/Components/SearchPelanggan";
-import { router } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import FormEdit from "./FormEdit";
 import ShowPemasanganBaru from "./ShowPemasanganBaru";
 import Select from "@/Components/Select";
@@ -85,27 +85,7 @@ export default function PemasanganBaru(props) {
         },
         {
             name: "Status Pembayaran",
-            selector: (row) =>
-                roles == "admin" ? (
-                    <select
-                        onChange={(e) =>
-                            konfirmasiPermintaan(e.target.value, row.id)
-                        }
-                        className={`w-full border-none outline-none rounded-md  ${
-                            row.status_pembayaran == "menunggu konfirmasi"
-                                ? "bg-orange-500"
-                                : "bg-green-500"
-                        } text-white capitalize text-xs`}
-                    >
-                        <option value="menunggu konfirmasi">
-                            menunggu konfirmasi
-                        </option>
-                        <option value="belum lunas">belum lunas</option>
-                        <option value="lunas">lunas</option>
-                    </select>
-                ) : (
-                    row.status_permintaan
-                ),
+            selector: (row) => row.status_pembayaran,
             width: "170px",
             wrap: true,
         },
@@ -168,15 +148,17 @@ export default function PemasanganBaru(props) {
                             </p>
                             <p>Lihat Rincian</p>
                         </button>
-                        <button
-                            onClick={() => editHandler(row)}
-                            className="btn-warning flex gap-x-1 items-center"
-                        >
-                            <p>
-                                <Edit color="inerit" fontSize="inherit" />
-                            </p>
-                            <p>Edit</p>
-                        </button>
+                        {row.status_pembayaran != "lunas" && (
+                            <button
+                                onClick={() => editHandler(row)}
+                                className="btn-warning flex gap-x-1 items-center"
+                            >
+                                <p>
+                                    <Edit color="inerit" fontSize="inherit" />
+                                </p>
+                                <p>Edit</p>
+                            </button>
+                        )}
                         <button
                             onClick={() => deleteHandler(row)}
                             className="btn-danger flex gap-x-1 items-center"
@@ -187,15 +169,6 @@ export default function PemasanganBaru(props) {
                             <p>Delete</p>
                         </button>
                     </div>
-                    <button
-                        onClick={() => showHandler(row)}
-                        className="btn-success flex gap-x-1 items-center w-full text-center justify-center my-1"
-                    >
-                        <p>
-                            <RemoveRedEye color="inerit" fontSize="inherit" />
-                        </p>
-                        <p>Lihat Rincian</p>
-                    </button>
                 </div>
             ),
             sortableing: true,

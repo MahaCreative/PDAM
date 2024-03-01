@@ -1,5 +1,6 @@
 import Input from "@/Components/Input";
 import TextArea from "@/Components/TextArea";
+import GuestLayout from "@/Layouts/GuestLayout";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import React from "react";
 
@@ -145,3 +146,4 @@ export default function Register() {
         </div>
     );
 }
+Register.layout = (page) => <GuestLayout children={page} />;

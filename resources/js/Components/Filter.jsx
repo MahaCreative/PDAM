@@ -51,6 +51,7 @@ export default function Filter({ links }) {
                         setParams({ ...params, tahun: e.target.value })
                     }
                 >
+                    <option value="">Pilih</option>
                     <option value={tahunSekarang.tahunSekarang}>
                         {tahunSekarang.tahunSekarang}
                     </option>

@@ -37,4 +37,35 @@ class TagihanBulananController extends Controller
         ]);
         return redirect()->back()->with(['type' => 'success', 'message' => 'Berhasil melakukan pembayaran.']);
     }
+
+    public function konfirmasi_pembayaran(Request $request)
+    {
+        $tagihan = TagihanBulanan::with('pembayaranTagihan')->findOrFail($request->id);
+        // dd($tagihan->pembayaranTagihan);
+
+        if ($request->value == 'telah di terima') {
+            $tagihan->update([
+                'nama_petugas_konfirmasi' => $request->user()->petugas->nama,
+                'status_tunggakan' => 'tidak menunggak',
+                'status_konfirmasi_pembayaran' => $request->value,
+                'status_pembayaran' => 'lunas'
+            ]);
+            $tagihan->pembayaranTagihan->update([
+                'nama_penerima' => $request->user()->petugas->nama,
+                'status_pembayaran' => 'telah di terima',
+
+            ]);
+        } else {
+            $tagihan->update([
+                'nama_petugas_konfirmasi' => $request->user()->petugas->nama,
+                'status_tunggakan' => 'tidak menunggak',
+                'status_konfirmasi_pembayaran' => $request->value,
+                'status_pembayaran' => 'belum di bayar'
+            ]);
+            $tagihan->pembayaranTagihan->update([
+                'nama_penerima' => $request->user()->petugas->nama,
+                'status_pembayaran' => $request->value,
+            ]);
+        }
+    }
 }
