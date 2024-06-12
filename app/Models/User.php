@@ -50,6 +50,11 @@ class User extends Authenticatable
     }
     public function pelanggan()
     {
-        return $this->hasOne(Pelanggan::class, 'pelanggan_id');
+        return $this->hasOne(ProfilePelanggan::class);
+    }
+
+    public function meteran()
+    {
+        return $this->belongsToMany(MeteranPelanggan::class);
     }
 }

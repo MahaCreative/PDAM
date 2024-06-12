@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('misis', function (Blueprint $table) {
             $table->id();
-            $table->string('misi');
-            $table->string('icon');
+            $table->longText('misi');
+            $table->string('icon')->default('Image/1.png');
             $table->timestamps();
         });
     }

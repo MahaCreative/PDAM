@@ -1,7 +1,8 @@
+import { Link } from "@inertiajs/react";
 import React from "react";
 import { Slide } from "react-slideshow-image";
 
-function SliderCard({ children }) {
+function SliderCard({ children, show }) {
     const settings = {
         autoplay: true,
         pauseOnHover: true,
@@ -13,7 +14,7 @@ function SliderCard({ children }) {
         {
             breakpoint: 800,
             settings: {
-                slidesToShow: 4,
+                slidesToShow: show > 4 ? 4 : show,
                 slidesToScroll: 1,
             },
         },
@@ -27,18 +28,13 @@ function SliderCard({ children }) {
     ];
     return (
         <div>
-            <Slide
-                slidesToScroll={1}
-                slidesToShow={4}
-                {...settings}
-                responsive={responsiveSettings}
-            >
+            <Slide {...settings} responsive={responsiveSettings}>
                 {children}
             </Slide>
         </div>
     );
 }
-function Item({ children, image }) {
+function Item({ children, image, link }) {
     const divStyle = {
         display: "flex",
         alignItems: "center",
@@ -48,19 +44,22 @@ function Item({ children, image }) {
         height: "50vh",
     };
     return (
-        <div className=" w-full group hover:cursor-pointer hover:scale-110 transition-all duration-300 ease-in-out mx-3">
+        <Link
+            href={link}
+            className=" w-full h-full group hover:cursor-pointer hover:scale-110 transition-all duration-300 ease-in-out mx-3"
+        >
             <div
-                className="relative rounded-lg overflow-hidden"
+                className="relative rounded-lg overflow-hidden h-full"
                 style={{
                     ...divStyle,
                     backgroundImage: `url(./storage/${image})`,
                 }}
             >
-                <div className="relative w-full h-full left-0 top-0">
-                    <div className="p-3">{children}</div>
+                <div className="relative w-full h-full left-0">
+                    <div className="p-3 h-full">{children}</div>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
 

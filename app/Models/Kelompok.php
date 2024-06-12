@@ -11,7 +11,7 @@ class Kelompok extends Model
     protected $guarded = [];
     public function pemasangan()
     {
-        return $this->hasMany(PemasanganBaru::class, 'nama_kelompok', 'nama');
+        return $this->hasMany(SambunganBaru::class, 'nama_kelompok', 'nama');
     }
 
     public function pemasanganBaruCount()

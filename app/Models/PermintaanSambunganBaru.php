@@ -9,8 +9,19 @@ class PermintaanSambunganBaru extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    public function pelanggan()
+
+    public function petugas()
     {
-        return $this->belongsTo(Pelanggan::class);
+        return $this->belongsTo(User::class, 'petugas_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function sambungan_baru()
+    {
+        return $this->hasOne(SambunganBaru::class,   'permintaan_sambungan_id',);
     }
 }

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('galeries', function (Blueprint $table) {
             $table->id();
+            $table->string('judul');
+            $table->string('slug');
+            $table->string('foto');
+            $table->longText('text');
             $table->timestamps();
         });
     }

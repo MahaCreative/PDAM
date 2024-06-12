@@ -3,12 +3,17 @@ import SliderCard from "@/Components/SliderCard";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Link, usePage } from "@inertiajs/react";
 import { ArrowForward } from "@mui/icons-material";
+import moment from "moment";
 import React from "react";
 
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 
-export default function Index() {
+export default function Index(props) {
+    const slide = props.slide;
+    const galery = props.galery;
+    const berita = props.berita;
+    const info = props.info;
     const spanStyle = {
         padding: "10px",
         background: "#34erew",
@@ -22,24 +27,7 @@ export default function Index() {
         backgroundSize: "cover",
         height: "50vh",
     };
-    const slideImages = [
-        {
-            url: "slider/1.jpeg",
-            caption: "Slide 1",
-        },
-        {
-            url: "slider/2.jpeg",
-            caption: "Slide 2",
-        },
-        {
-            url: "slider/3.jpeg",
-            caption: "Slide 3",
-        },
-        {
-            url: "slider/4.jpeg",
-            caption: "Slide 3",
-        },
-    ];
+
     const settings = {
         autoplay: true,
         indicators: true,
@@ -87,15 +75,15 @@ export default function Index() {
 
             {/* children disini yah*/}
 
-            <div className="px-3 md:px-6 lg:px-16 py-6 bg-no-repeat bg-center bg-[url('/storage/icon/header-background.svg')]">
+            <div className="px-3 md:px-6 lg:px-16 py-6 bg-no-repeat bg-center bg-[foto('/storage/icon/header-background.svg')]">
                 <div className="slide-container">
                     <Slide {...settings} {...properties}>
-                        {slideImages.map((slideImage, index) => (
+                        {slide.map((item, index) => (
                             <div key={index}>
                                 <div
                                     style={{
                                         ...divStyle,
-                                        backgroundImage: `url(./storage/${slideImage.url})`,
+                                        backgroundImage: `url(./storage/${item.foto})`,
                                     }}
                                 ></div>
                             </div>
@@ -106,7 +94,7 @@ export default function Index() {
             {/* Menu */}
             <div>
                 <div className="py-6 px-4 md:px-8 lg:px-16">
-                    <div className="grid grid-cols-2 md:grid-cols-4">
+                    {/* <div className="grid grid-cols-2 md:grid-cols-4">
                         <Link
                             href=""
                             as="div"
@@ -248,7 +236,7 @@ export default function Index() {
                                 History Pemakaian
                             </p>
                         </Link>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             {/* info */}
@@ -257,7 +245,10 @@ export default function Index() {
                     <h1 className="text-blue-500 font-fira font-semibold text-lg md:text-xl lg:text-2xl">
                         INFO PDAM
                     </h1>
-                    <Link className="text-blue-500 font-fira font-semibold text-xs">
+                    <Link
+                        href={route("info-pdam")}
+                        className="text-blue-500 font-fira font-semibold text-xs"
+                    >
                         SELENGKAPNYA{" "}
                         <span className="p-1 bg-blue-500 text-white rounded-full">
                             <ArrowForward fontSize="inherit" color="inherit" />
@@ -265,12 +256,31 @@ export default function Index() {
                     </Link>
                 </div>
                 <div className="slide-container my-3">
-                    <SliderCard>
-                        {slideImages.map((image, index) => (
+                    <SliderCard show={info.length}>
+                        {info.map((item, index) => (
                             <SliderCard.Item
+                                link={route("show-info-pdam", item.slug)}
                                 key={index}
-                                image={image.url}
-                            ></SliderCard.Item>
+                                image={item.foto}
+                            >
+                                <div
+                                    as="div"
+                                    className="flex justify-end items-end h-full w-full"
+                                >
+                                    <div className="bg-blue-500/50 backdrop-blur-sm w-full px-3 py-2 rounded-md">
+                                        <div className="">
+                                            <p className="text-white font-semibold text-sm">
+                                                {item.judul}
+                                            </p>
+                                            <p className="text-xs font-extralight text-white">
+                                                {moment(item.created_at).format(
+                                                    "ll"
+                                                )}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </SliderCard.Item>
                         ))}
                     </SliderCard>
                 </div>
@@ -278,9 +288,12 @@ export default function Index() {
             <div className="px-3 md:px-6 lg:px-16 pt-6">
                 <div className="flex gap-x-3 justify-between items-center">
                     <h1 className="text-blue-500 font-fira font-semibold text-lg md:text-xl lg:text-2xl">
-                        INFO PDAM
+                        Berita
                     </h1>
-                    <Link className="text-blue-500 font-fira font-semibold text-xs">
+                    <Link
+                        href={route("berita")}
+                        className="text-blue-500 font-fira font-semibold text-xs"
+                    >
                         SELENGKAPNYA{" "}
                         <span className="p-1 bg-blue-500 text-white rounded-full">
                             <ArrowForward fontSize="inherit" color="inherit" />
@@ -288,12 +301,31 @@ export default function Index() {
                     </Link>
                 </div>
                 <div className="slide-container my-3">
-                    <SliderCard>
-                        {slideImages.map((image, index) => (
+                    <SliderCard show={berita.length}>
+                        {berita.map((item, index) => (
                             <SliderCard.Item
+                                link={route("show-berita", item.slug)}
                                 key={index}
-                                image={image.url}
-                            ></SliderCard.Item>
+                                image={item.foto}
+                            >
+                                <div
+                                    as="div"
+                                    className="flex justify-end items-end h-full w-full"
+                                >
+                                    <div className="bg-blue-500/50 backdrop-blur-sm w-full px-3 py-2 rounded-md">
+                                        <div className="">
+                                            <p className="text-white font-semibold text-sm">
+                                                {item.judul}
+                                            </p>
+                                            <p className="text-xs font-extralight text-white">
+                                                {moment(item.created_at).format(
+                                                    "ll"
+                                                )}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </SliderCard.Item>
                         ))}
                     </SliderCard>
                 </div>
@@ -301,9 +333,12 @@ export default function Index() {
             <div className="px-3 md:px-6 lg:px-16 pt-6">
                 <div className="flex gap-x-3 justify-between items-center">
                     <h1 className="text-blue-500 font-fira font-semibold text-lg md:text-xl lg:text-2xl">
-                        INFO PDAM
+                        Galery
                     </h1>
-                    <Link className="text-blue-500 font-fira font-semibold text-xs">
+                    <Link
+                        href={route("galery")}
+                        className="text-blue-500 font-fira font-semibold text-xs"
+                    >
                         SELENGKAPNYA{" "}
                         <span className="p-1 bg-blue-500 text-white rounded-full">
                             <ArrowForward fontSize="inherit" color="inherit" />
@@ -311,34 +346,12 @@ export default function Index() {
                     </Link>
                 </div>
                 <div className="slide-container my-3">
-                    <SliderCard>
-                        {slideImages.map((image, index) => (
+                    <SliderCard show={galery.length}>
+                        {galery.map((item, index) => (
                             <SliderCard.Item
+                                link={route("show-galery", item.slug)}
                                 key={index}
-                                image={image.url}
-                            ></SliderCard.Item>
-                        ))}
-                    </SliderCard>
-                </div>
-            </div>
-            <div className="px-3 md:px-6 lg:px-16 pt-6">
-                <div className="flex gap-x-3 justify-between items-center">
-                    <h1 className="text-blue-500 font-fira font-semibold text-lg md:text-xl lg:text-2xl">
-                        INFO PDAM
-                    </h1>
-                    <Link className="text-blue-500 font-fira font-semibold text-xs">
-                        SELENGKAPNYA{" "}
-                        <span className="p-1 bg-blue-500 text-white rounded-full">
-                            <ArrowForward fontSize="inherit" color="inherit" />
-                        </span>
-                    </Link>
-                </div>
-                <div className="slide-container my-3">
-                    <SliderCard>
-                        {slideImages.map((image, index) => (
-                            <SliderCard.Item
-                                key={index}
-                                image={image.url}
+                                image={item.foto}
                             ></SliderCard.Item>
                         ))}
                     </SliderCard>

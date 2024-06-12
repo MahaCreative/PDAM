@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('susunan_direksis', function (Blueprint $table) {
             $table->id();
+            $table->string('nama');
+            $table->string('jabatan');
+            $table->integer('level')->default(1);
+            $table->string('foto');
+            $table->longText('text');
             $table->timestamps();
         });
     }

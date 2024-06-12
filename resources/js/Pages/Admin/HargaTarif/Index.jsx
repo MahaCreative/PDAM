@@ -1,7 +1,7 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 
 import React, { useState } from "react";
-import CanvasJSReact from "@canvasjs/react-charts";
+
 import DataTable from "react-data-table-component";
 import {
     Add,
@@ -16,11 +16,9 @@ import {
 import Modal from "@/Components/Modal";
 import Form from "./Form";
 import { router } from "@inertiajs/react";
-var CanvasJS = CanvasJSReact.CanvasJS;
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+import CurrencyInput from "react-currency-input-field";
+
 export default function Index(props) {
-    var CanvasJS = CanvasJSReact.CanvasJS;
-    var CanvasJSChart = CanvasJSReact.CanvasJSChart;
     const golonganCount = props.golonganCount;
     const kelompokCount = props.kelompokCount;
     const hargaTarif = props.hargaTarif;
@@ -50,25 +48,73 @@ export default function Index(props) {
         },
         {
             name: "Tarif 0 - 10 m3",
-            selector: (row) => row.tarif1,
+            selector: (row) => (
+                <CurrencyInput
+                    value={row.tarif1}
+                    disabled
+                    className="border-none bg-white"
+                />
+            ),
             sortable: true,
             width: "170px",
         },
         {
             name: "Tarif 11 - 20 m3",
-            selector: (row) => row.tarif2,
+            selector: (row) => (
+                <CurrencyInput
+                    value={row.tarif2}
+                    disabled
+                    className="border-none bg-white"
+                />
+            ),
             sortable: true,
             width: "170px",
         },
         {
             name: "Tarif 21 - 30 m3",
-            selector: (row) => row.tarif3,
+            selector: (row) => (
+                <CurrencyInput
+                    value={row.tarif3}
+                    disabled
+                    className="border-none bg-white"
+                />
+            ),
             sortable: true,
             width: "170px",
         },
         {
             name: "Tarif > 30 m3",
-            selector: (row) => row.tarif4,
+            selector: (row) => (
+                <CurrencyInput
+                    value={row.tarif4}
+                    disabled
+                    className="border-none bg-white"
+                />
+            ),
+            sortable: true,
+            width: "150px",
+        },
+        {
+            name: "Biaya Administrasi",
+            selector: (row) => (
+                <CurrencyInput
+                    value={row.adm}
+                    disabled
+                    className="border-none bg-white"
+                />
+            ),
+            sortable: true,
+            width: "150px",
+        },
+        {
+            name: "Denda",
+            selector: (row) => (
+                <CurrencyInput
+                    value={row.denda}
+                    disabled
+                    className="border-none bg-white"
+                />
+            ),
             sortable: true,
             width: "150px",
         },
@@ -293,26 +339,9 @@ export default function Index(props) {
                         </p>
                         <p>Tambah</p>
                     </button>
-                    <button className="btn-warning flex gap-x-1 items-center">
-                        <p>
-                            <Print color="inerit" fontSize="inherit" />
-                        </p>
-                        <p>Cetak</p>
-                    </button>
                 </div>
                 <div className="my-2">
                     <DataTable data={hargaTarif} columns={columns} />
-                </div>
-                <div className="my-3 darkBackground lightBackground bg-blue-500 px-3 py-2 rounded-md text-white">
-                    <h1>Grafik Total Pemasangan Kelompok dan Golongan</h1>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3">
-                        <div className="rounded-md overflow-hidden shadow-gray-900/20 shadow-md">
-                            <CanvasJSChart options={options} />
-                        </div>
-                        <div className="rounded-md overflow-hidden shadow-gray-900/20 shadow-md">
-                            <CanvasJSChart options={optionsGolongan} />
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

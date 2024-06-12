@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\HargaTarifPerMeter;
-use App\Models\PemasanganBaru;
+use App\Models\MeteranPelanggan;
 use App\Models\PencatatanMeter;
+use App\Models\PeriodeTagihan;
 use App\Models\TagihanBulanan;
 use Illuminate\Http\Request;
 
@@ -13,127 +13,156 @@ class PencatatanMeterController extends Controller
 {
     public function index(Request $request)
     {
-        $roles = $request->user()->getRoleNames()[0];
-        $query = PencatatanMeter::query()->with('pemasanganBaru');
+        $query = PencatatanMeter::query()->with('meteran', 'periode');
+        // $periode = PeriodeTagihan::where('periode_tagihan', '=', \Str::lower(date("F")) . " " . date("Y"))->first();
+        // $periode_id = $periode->id;
+        $catatan = 'belum dicatat';
+        $count_status = PencatatanMeter::count_pembayaran();
+        $count_catat = PencatatanMeter::count_catat();
+        if ($request->status) {
+            $query->where('status_pembayaran', $request->status);
+        }
+        if ($request->status_catatan == 'sudah dicatat') {
+            $catatan = 'sudah dicatat';
+        }
+        if ($request->periode_id) {
+            $periode = PeriodeTagihan::findOrFail($request->periode_id);
+        }
+        $query->where('status_pencatatan', $catatan);
         if ($request->cari) {
-            $query->whereHas('pemasanganBaru', function ($q) use ($request) {
-                $q->where('no_sambungan', 'like', '%' . $request->cari . '%');
+            $query->whereHas('meteran', function ($q) use ($request) {
+                $q->where('no_meteran', 'like', '%' . $request->cari . '%')
+                    ->orWhere('nama', 'like', '%' . $request->cari . '%')
+                    ->orWhere('no_sambungan', 'like', '%' . $request->cari . '%');
             });
         }
-        $pencatatanMeter = $query
-            ->whereMonth('tanggal_pencatatan', $request->bulan ? $request->bulan : now()->month)
-            ->whereYear('tanggal_pencatatan', $request->tahun ? $request->tahun : now()->year)
-            ->latest()->get();
+        if ($request->bulan) {
 
-        return inertia('Admin/PencatatanMeter/PencatatanMeter', compact('pencatatanMeter', 'roles'));
+            $query->whereHas('periode', function ($q) use ($request) {
+                $q->where('bulan', 'like', '%' . $request->bulan . '%');
+            });
+        }
+        if ($request->tahun) {
+            $query->whereHas('periode', function ($q) use ($request) {
+                $q->where('tahun', $request->tahun);
+            });
+        }
+
+        $meteran = $query->latest()->get();
+        // dd($meteran);
+        return inertia('Admin/PencatatanMeteran/Index', compact('meteran', 'count_status', 'count_catat'));
     }
+
+    public function cetak(Request $request)
+    {
+        $query = PencatatanMeter::query()->with('meteran', 'periode');
+        // $periode = PeriodeTagihan::where('periode_tagihan', '=', \Str::lower(date("F")) . " " . date("Y"))->first();
+        // $periode_id = $periode->id;
+
+        if ($request->status) {
+            $query->where('status_pembayaran', $request->status);
+        }
+        if ($request->status_catatan == 'sudah dicatat') {
+            $catatan = 'sudah dicatat';
+        }
+        if ($request->periode_id) {
+            $periode = PeriodeTagihan::findOrFail($request->periode_id);
+        }
+
+        if ($request->cari) {
+            $query->whereHas('meteran', function ($q) use ($request) {
+                $q->where('no_meteran', 'like', '%' . $request->cari . '%')
+                    ->orWhere('nama', 'like', '%' . $request->cari . '%')
+                    ->orWhere('no_sambungan', 'like', '%' . $request->cari . '%');
+            });
+        }
+        if ($request->bulan) {
+
+            $query->whereHas('periode', function ($q) use ($request) {
+                $q->where('bulan', 'like', '%' . $request->bulan . '%');
+            });
+        }
+        if ($request->tahun) {
+            $query->whereHas('periode', function ($q) use ($request) {
+                $q->where('tahun', $request->tahun);
+            });
+        }
+
+        $meteran = $query->latest()->get();
+        // dd($meteran);
+        return inertia('Admin/PencatatanMeteran/Cetak', compact('meteran'));
+    }
+    public function create(Request $request, $id)
+    {
+        $dataMeteran = PencatatanMeter::with('meteran', 'periode')->findOrFail($id);
+        $latest = PencatatanMeter::where('meteran_pelanggan_id', $dataMeteran->meteran_pelanggan_id)
+            ->latest()->get()->take(2);
+        $getMeteran = MeteranPelanggan::with('harga_tarif')->findOrFail($dataMeteran->meteran_pelanggan_id);
+        $meterAwal = 0;
+        if (count($latest) > 1) {
+            $meterAwal = $latest[1]->meter_akhir;
+        }
+        $data = [
+            'id' => $dataMeteran->id,
+            'meter_awal' => $meterAwal,
+            'harga_tarif' => $getMeteran->harga_tarif,
+        ];
+
+        // dd($dataMeteran);
+        return inertia('Admin/PencatatanMeteran/Create', compact('dataMeteran', 'data'));
+    }
+
     public function store(Request $request)
     {
-        // dd($request->all());
-        $attr = $request->validate([
-            'stand_meter_awal' => 'required',
-            'stand_meter_sekarang' => 'required|numeric|min:' . $request->stand_meter_awal,
-            'total_pemakaian' => 'required',
+        $user = $request->user()->with('petugas')->first();
 
-        ]);
-        $attr['pemasangan_baru_id'] = 1;
-        $attr['tanggal_pencatatan'] = now();
-        $attr['nama_petugas_pencatat'] = 'UJI COBA';
-        $attr['pemasangan_baru_id'] = $request->pemasangan_baru_id;
-        $cekPencatatan = PencatatanMeter::where('pemasangan_baru_id', $request->pemasangan_baru_id)
-            ->whereMonth('tanggal_pencatatan', now()->month)
-            ->whereYear('tanggal_pencatatan', now()->year)->get();
+        $dataMeteran = PencatatanMeter::findOrFail($request->id);
+        $denda = 0;
+        $status_menunggak = 'tidak menunggak';
+        $cekTunggakan = PencatatanMeter::where('meteran_pelanggan_id', $dataMeteran->meteran_pelanggan_id)->where('status_pembayaran', 'belum lunas')->whereNotIn('id', [$dataMeteran->id])->get();
 
-        if (count($cekPencatatan) > 0) {
-            return redirect()->back()->with(['type' => 'error', 'message' => 'Maaf, pencatatan meteran baru tidak bisa dilakukan, karena meteran ini telah dicatat di bulan ini']);
-        } else {
+        $meteranPelanggan = MeteranPelanggan::with(['harga_tarif'])->findOrFail($dataMeteran->meteran_pelanggan_id);
 
-            $getPemasanganBaru = PemasanganBaru::findOrFail($request->pemasangan_baru_id);
-            $cekTarif = HargaTarifPerMeter::where('golongan', $getPemasanganBaru->nama_golongan)->where('kelompok', $getPemasanganBaru->nama_kelompok)->first();
-            $tarif1 = 0;
-            $tarif2 = 0;
-            $tarif3 = 0;
-            $tarif4 = 0;
+        if ($cekTunggakan) {
 
-            $pemakaian1 = 0;
-            $pemakaian2 = 0;
-            $pemakaian3 = 0;
-            $pemakaian4 = 0;
-            if ($request->total_pemakaian > 0) {
-                $pemakaian1 = min(10, $request->total_pemakaian);
+            $denda = $meteranPelanggan->harga_tarif->denda;
+            if (count($cekTunggakan) >= 3) {
+                $meteranPelanggan->update(['status_meteran' => 'pencabutan sementara']);
+            } else   if (count($cekTunggakan) >= 5) {
+                $meteranPelanggan->update(['status_meteran' =>  'non aktif']);
             }
-
-            if ($request->total_pemakaian > 10) {
-                $pemakaian2 = min(10, $request->total_pemakaian - $pemakaian1);
+            foreach ($cekTunggakan as $item) {
+                $tagihan = TagihanBulanan::where('pencatatan_meter_id', $item->id);
+                $tagihan->update([
+                    'status_tunggakan' => 'menunggak'
+                ]);
             }
-
-            if ($request->total_pemakaian > 20) {
-                $pemakaian3 = min(10, $request->total_pemakaian - $pemakaian1 - $pemakaian2);
-            }
-
-            if ($request->total_pemakaian > 30) {
-                $pemakaian4 = $request->total_pemakaian - $pemakaian1 - $pemakaian2 - $pemakaian3;
-            }
-
-            $tarif1 = $pemakaian1 * $cekTarif->tarif1;
-            $tarif2 = $pemakaian2 * $cekTarif->tarif2;
-            $tarif3 = $pemakaian3 * $cekTarif->tarif3;
-            $tarif4 = $pemakaian4 * $cekTarif->tarif4;
-            $denda = 0;
-            $adm = $cekTarif->adm;
-            $total = $tarif1 + $tarif2 + $tarif3 + $tarif4 + $adm + $denda;
-
-            $attr['pemakaian_10'] = $pemakaian1;
-            $attr['pemakaian_20'] = $pemakaian2;
-            $attr['pemakaian_30'] = $pemakaian3;
-            $attr['pemakaian_30_keatas'] = $pemakaian4;
-            $attr['petugas_id'] = $request->user()->id;
-            $attr['nama_petugas_pencatat'] = $request->user()->petugas->nama;
-            $pencatatanMeter = PencatatanMeter::create($attr);
-            $tagihanBulanan = TagihanBulanan::create([
-                'tarif_id' => $cekTarif->id,
-                'pencatatan_meter_id' => $pencatatanMeter->id,
-                'pemasangan_baru_id' => $getPemasanganBaru->id,
-                'wilayah_id' => $getPemasanganBaru->wilayah_id,
-                'kode_sambungan' => $getPemasanganBaru->kode_pemasangan_baru,
-                'no_sambungan' =>  $getPemasanganBaru->no_sambungan,
-                'nama_pelanggan' =>  $getPemasanganBaru->nama_pelanggan,
-                'alamat' =>  $getPemasanganBaru->alamat_pemasangan,
-                'stand_meter_awal' => $pencatatanMeter->stand_meter_awal,
-                'stand_meter_akhir' => $pencatatanMeter->stand_meter_sekarang,
-                'total_pemakaian' => $pencatatanMeter->total_pemakaian,
-                'tarif_pemakaian_10' => $tarif1,
-                'tarif_pemakaian_20' => $tarif2,
-                'tarif_pemakaian_30' => $tarif3,
-                'pemakaian_10' => $pemakaian1,
-                'pemakaian_20' => $pemakaian2,
-                'pemakaian_30' => $pemakaian3,
-                'pemakaian_30_keatas' => $pemakaian4,
-                'tarif_pemakaian_30_keatas' => $tarif4,
-                'adm' => $adm,
-                'denda' => $denda,
-                'total_tagihan' => $total,
-                'tanggal_tagihan' => now(),
-                'periode_tagihan' => now(),
-
-            ]);
-            return redirect()->back()->with(['type' => 'success', 'message' => 'Berhasil menambahkan pencatatan meter baru']);
         }
-    }
 
-
-    public function delete(Request $request)
-    {
-        $pencatatanMeter = PencatatanMeter::findOrFail($request->id);
-        $pencatatanMeter->delete();
-        return redirect()->back()->with(['type' => 'success', 'message' => 'Berhasil menghapus data dan data yang terkait']);
-    }
-
-    public function konfirmasi_handler(Request $request)
-    {
-        $pencatatanMeter = PencatatanMeter::findOrFail($request->id);
-        $pencatatanMeter->update(['status_diterima' => $request->status_diterima]);
-
-        return redirect()->back()->with(['type' => 'success', 'message' => 'Berhasil melakukan konfirmasi pencatatan meter']); // atau redirect ke halaman yang diinginkan
+        $request->validate(['meter_akhir' => 'numeric|required']);
+        $dataMeteran->update([
+            "meter_awal" => $request->meter_awal,
+            "meter_akhir" => $request->meter_akhir,
+            "meter_pemakaian" => $request->meter_pemakaian,
+            "tanggal_pencatatan" => now(),
+            "nama_petugas_pencatat" => $user->petugas->nama,
+            'status_pencatatan' => 'sudah dicatat'
+        ]);
+        $tagihan = TagihanBulanan::where('pencatatan_meter_id', $dataMeteran->id)->first();
+        $tagihan->update([
+            'stand_meter_awal' => $request->meter_awal,
+            'stand_meter_akhir' => $request->meter_akhir,
+            'total_pemakaian' => $request->meter_pemakaian,
+            'pemakaian_10' => $request->pemakaian1,
+            'pemakaian_20' => $request->pemakaian2,
+            'pemakaian_30' => $request->pemakaian3,
+            'pemakaian_30_keatas' => $request->pemakaian4,
+            'tarif_pemakaian_10' => $request->tarif1,
+            'tarif_pemakaian_20' => $request->tarif2,
+            'tarif_pemakaian_30' => $request->tarif3,
+            'tarif_pemakaian_30_keatas' => $request->tarif4,
+            'denda' =>  $denda,
+            'total_tagihan' => $request->total_biaya + $denda,
+        ]);
     }
 }

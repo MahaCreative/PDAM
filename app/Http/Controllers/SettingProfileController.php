@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
 use App\Models\Petugas;
+use App\Models\ProfilePelanggan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,7 +21,7 @@ class SettingProfileController extends Controller
 
         $foto = $request->file('foto') ? $request->file('foto')->store('Foto') : null;
         if ($request->roles == 'pelanggan') {
-            $pelanggan = Pelanggan::findOrFail($request->id);
+            $pelanggan = ProfilePelanggan::findOrFail($request->id);
             $pelanggan->update(['foto' => $foto]);
         }
         if ($request->roles !== 'pelanggan') {
@@ -34,7 +35,9 @@ class SettingProfileController extends Controller
     {
 
         if ($request->roles == 'pelanggan') {
-            $pelanggan = Pelanggan::findOrFail($request->id);
+            $pelanggan = ProfilePelanggan::findOrFail($request->id);
+            $user = User::where('id', $pelanggan->user_id)->first();
+            $user->update(['name' => $request->nama_pelanggan]);
             $request->validate([
                 'no_ktp' => ['required', 'numeric', 'min:16', Rule::unique('pelanggans', 'no_ktp')->ignore($pelanggan->id)],
                 'nama_pelanggan' => ['required', 'string', 'min:3'],

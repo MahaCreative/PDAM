@@ -10,6 +10,7 @@ import Close from "@mui/icons-material/Close";
 export default function SidebarDesktop({ children, auth }) {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [open, setOpen] = useState(false);
+    console.log(auth);
     useEffect(() => {
         const updateClock = () => {
             const now = new Date();
@@ -43,7 +44,7 @@ export default function SidebarDesktop({ children, auth }) {
             ref={sidebarRef}
             className={clsx(
                 open ? "translate-x-0" : "-translate-x-full",
-                "fixed text-white h-full min-w-[70%] md:w-[40%] lg:min-w-[20%]    transition-all duration-300 ease-in-out  transform z-[55]"
+                "fixed text-white h-full min-w-[70%] md:w-[40%] lg:min-w-[20%]    transition-all duration-300 ease-in-out  transform z-[9999]"
             )}
         >
             <div className="relative h-full">

@@ -11,6 +11,6 @@ class Wilayah extends Model
     protected $guarded = [];
     public function pemasanganBaru()
     {
-        return $this->hasMany(PemasanganBaru::class);
+        return $this->hasMany(SambunganBaru::class);
     }
 }

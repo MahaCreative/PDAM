@@ -1,11 +1,11 @@
 import DropdownLink from "@/Components/DropdownLink";
 import GuestLink from "@/Components/GuestLink";
 import MenuPelanggan from "@/Components/MenuPelanggan";
-import { Link, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { Add, Menu, Report, WaterDrop } from "@mui/icons-material";
 import React, { useEffect, useRef, useState } from "react";
 
-export default function GuestLayout({ children }) {
+export default function GuestLayout({ title, children }) {
     const { settingApps } = usePage().props;
     const { auth } = usePage().props;
     const [sidebar, setSidebar] = useState(false);
@@ -22,7 +22,8 @@ export default function GuestLayout({ children }) {
         };
     });
     return (
-        <div className="">
+        <div className="font-fira">
+            <Head title={title} />
             <div
                 ref={sidebarRef}
                 className={`fixed  z-50 w-[80%] bg-white/50 backdrop-blur-sm h-screen right-0 top-0 ${
@@ -45,12 +46,6 @@ export default function GuestLayout({ children }) {
                         <div>
                             <div>
                                 <GuestLink
-                                    href={route(
-                                        "pelanggan.permintaan-sambungan-baru"
-                                    )}
-                                    active={
-                                        "pelanggan.permintaan-sambungan-baru"
-                                    }
                                     title={"Permintaan Sambungan Baru"}
                                     icon={
                                         <Add
@@ -60,10 +55,6 @@ export default function GuestLayout({ children }) {
                                     }
                                 />
                                 <GuestLink
-                                    href={route(
-                                        "pelanggan.sambungan-pelanggan"
-                                    )}
-                                    active={"pelanggan.sambungan-pelanggan"}
                                     title={"Menghubungkan Akun Meteran"}
                                     icon={
                                         <WaterDrop
@@ -74,10 +65,6 @@ export default function GuestLayout({ children }) {
                                 />
 
                                 <GuestLink
-                                    href={route(
-                                        "pelanggan.pengaduan-pelanggan"
-                                    )}
-                                    active={"pelanggan.pengaduan-pelanggan"}
                                     title={"Layanan Pelanggan"}
                                     icon={
                                         <Report
@@ -87,6 +74,67 @@ export default function GuestLayout({ children }) {
                                     }
                                 />
                             </div>
+                        </div>
+                    </div>
+                    <div className="my-4 ">
+                        <p className="font-bold">Info PDAM</p>
+                        <div>
+                            <Link
+                                as="div"
+                                href={route("visi-misi")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white"
+                            >
+                                Visi Misi
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("susunan-direksi")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white"
+                            >
+                                Susunan Direksi
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("sejarah")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white"
+                            >
+                                Sejarah
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("struktur-organisasi")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white"
+                            >
+                                Struktur Organisasi
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("simulasi")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white"
+                            >
+                                Simulasi
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("info-pdam")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white"
+                            >
+                                Info PDAM
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("berita")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white"
+                            >
+                                Berita
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("galery")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white"
+                            >
+                                Galery
+                            </Link>
                         </div>
                     </div>
 
@@ -148,6 +196,64 @@ export default function GuestLayout({ children }) {
                         >
                             Beranda
                         </Link>
+                        <DropdownLink name={"Info PDAM"}>
+                            <Link
+                                as="div"
+                                href={route("visi-misi")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white w-[150px] hover:cur\"
+                            >
+                                Visi Misi
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("susunan-direksi")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white w-[150px] hover:cur\"
+                            >
+                                Susunan Direksi
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("sejarah")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white w-[150px] hover:cur\"
+                            >
+                                Sejarah
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("struktur-organisasi")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white w-[150px] hover:cur\"
+                            >
+                                Struktur Organisasi
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("simulasi")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white w-[150px] hover:cur\"
+                            >
+                                Simulasi
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("info-pdam")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white w-[150px] hover:cur\"
+                            >
+                                Info PDAM
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("berita")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white w-[150px] hover:cur\"
+                            >
+                                Berita
+                            </Link>
+                            <Link
+                                as="div"
+                                href={route("galery")}
+                                className="py-1 px-3 hover:bg-slate-950 hover:text-white w-[150px] hover:cur\"
+                            >
+                                Galery
+                            </Link>
+                        </DropdownLink>
                         {auth.roles == "pelanggan" && (
                             <DropdownLink name={"Pelanggan"}>
                                 <MenuPelanggan />

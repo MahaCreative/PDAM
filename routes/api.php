@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MidtransHandler;
 use App\Models\Golongan;
 use App\Models\HargaTarifPerMeter;
 use App\Models\Kelompok;
@@ -21,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('create-token', [MidtransHandler::class, 'create_token'])->name('create-token');
+Route::post('midtrans-callbak', [MidtransHandler::class, 'midtrans_callback'])->name('midtrans-callback');
 Route::get('get-kelompok', function (Request $request) {
     $query = HargaTarifPerMeter::query();
     if ($request->cari !== '') {

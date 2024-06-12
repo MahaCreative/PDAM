@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\MeteranPelanggan;
 use App\Models\PemasanganBaru;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,18 +19,16 @@ class PencatatanMeterFactory extends Factory
      */
     public function definition(): array
     {
-        $pemasanganBaru = PemasanganBaru::factory()->create();
+        $user = User::whereNotIn('id', [1, 2])->get();
+        $status = ['lunas', 'belum lunas'];
         return [
-            'pemasangan_baru_id' => $pemasanganBaru->id,
-            'tanggal_pencatatan' => $this->faker->dateTimeBetween('-1 years', 'now'),
-            'stand_meter_awal' => $standMeterAwal = rand(0, 60),
-            'stand_meter_sekarang' => $standMeterSekarang = $standMeterAwal + rand(10, 40),
-            'total_pemakaian' => $standMeterSekarang - $standMeterAwal,
-            'nama_petugas_pencatat' => $this->faker->name(),
-            'pemakaian_10' => '10',
-            'pemakaian_20' => '10',
-            'pemakaian_30' => '10',
-            'pemakaian_30_keatas' => '10',
+            'meteran_pelanggan_id' => rand(1, MeteranPelanggan::count() - 1),
+            'meter_awal' => '0',
+            'meter_akhir' => $pemakaian = rand(1, 50),
+            'meter_pemakaian' => $pemakaian,
+            'tanggal_pencatatan' => $this->faker->dateTimeBetween('-2 years', 'now'),
+            'nama_petugas_pencatat' => $user[rand(1, User::count() - 3)]->name,
+            'status_pembayaran' => $status[rand(0, 1)]
         ];
     }
 }

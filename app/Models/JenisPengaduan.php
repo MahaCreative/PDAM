@@ -9,4 +9,9 @@ class JenisPengaduan extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function pengaduan()
+    {
+        return $this->hasMany(Pengaduan::class);
+    }
 }

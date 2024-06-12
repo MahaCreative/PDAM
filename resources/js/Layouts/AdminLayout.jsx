@@ -1,7 +1,12 @@
 import MenuSidebar from "@/Components/MenuSidebar";
 import SidebarDesktop from "@/Components/SidebarDesktop";
 import React, { useEffect, useState } from "react";
-
+import {
+    ContactSupport,
+    CorporateFare,
+    Receipt,
+    Report,
+} from "@mui/icons-material";
 import { format } from "date-fns";
 import { id } from "date-fns/locale"; // Bahasa Indonesia locale
 import { Head, Link, usePage } from "@inertiajs/react";
@@ -85,7 +90,165 @@ export default function AdminLayout({ children, title, links }) {
                         title={"Dashboard"}
                         icon={<Widgets color="inerit" fontSize="inherit" />}
                     />
-                    {auth.roles == "admin" && <MenuAdmin />}
+                    {auth.roles == "admin" && (
+                        <>
+                            <MenuSidebar
+                                title={"Master Data"}
+                                icon={
+                                    <CorporateFare
+                                        color="inherit"
+                                        fontSize="inherit"
+                                    />
+                                }
+                            >
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.golongan-kelompok")}
+                                >
+                                    Golongan dan Kelompok
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.harga-tarif")}
+                                >
+                                    Harga Tarif
+                                </MenuSidebar.MenuLink>
+
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.jenis-pengaduan")}
+                                >
+                                    Jenis Pengaduan
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.meteran-pelanggan")}
+                                >
+                                    Meteran Pelanggan
+                                </MenuSidebar.MenuLink>
+                            </MenuSidebar>
+                            <MenuSidebar
+                                title={"Data Tagihan"}
+                                icon={
+                                    <CorporateFare
+                                        color="inherit"
+                                        fontSize="inherit"
+                                    />
+                                }
+                            >
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.periode-tagihan")}
+                                >
+                                    Periode Tagihan
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.tagihan-bulanan")}
+                                >
+                                    Tagihan Bulanan Pelanggan
+                                </MenuSidebar.MenuLink>
+                            </MenuSidebar>
+                        </>
+                    )}
+
+                    {auth.roles == "admin" && (
+                        <>
+                            <MenuLink
+                                active={"admin.pengaduan-pelanggan"}
+                                href={route("admin.pengaduan-pelanggan")}
+                                title={"Pengaduan Pelanggan"}
+                                icon={
+                                    <Report color="inerit" fontSize="inherit" />
+                                }
+                            />
+
+                            <MenuSidebar
+                                title={"Setting Perusahaan"}
+                                icon={
+                                    <CorporateFare
+                                        color="inherit"
+                                        fontSize="inherit"
+                                    />
+                                }
+                            >
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.setting-apps")}
+                                >
+                                    Profile Perusahaan
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.visi-misi")}
+                                >
+                                    Visi Misi
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.sejarah")}
+                                >
+                                    Sejarah
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.susunan-direksi")}
+                                >
+                                    Susunan Direksi
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.struktur-organisasi")}
+                                >
+                                    Struktur Organisasi
+                                </MenuSidebar.MenuLink>
+                            </MenuSidebar>
+                            <MenuSidebar
+                                title={"Blog"}
+                                icon={
+                                    <CorporateFare
+                                        color="inherit"
+                                        fontSize="inherit"
+                                    />
+                                }
+                            >
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.info-pdam")}
+                                >
+                                    Info PDAM
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.berita")}
+                                >
+                                    Berita
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.galery")}
+                                >
+                                    Galery
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.slider")}
+                                >
+                                    Slider
+                                </MenuSidebar.MenuLink>
+                            </MenuSidebar>
+                        </>
+                    )}
+                    {auth.roles == "petugas lapangan" && (
+                        <>
+                            <MenuSidebar
+                                title={"Daftar Tugas"}
+                                icon={
+                                    <CorporateFare
+                                        color="inherit"
+                                        fontSize="inherit"
+                                    />
+                                }
+                            >
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.pencatatan-meter")}
+                                >
+                                    Pencatatan Meter
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
+                                    href={route("admin.pengaduan-pelanggan")}
+                                >
+                                    Pengaudan Pelanggan
+                                </MenuSidebar.MenuLink>
+                            </MenuSidebar>
+                        </>
+                    )}
+
                     {auth.roles == "pelanggan" && <MenuPelanggan />}
 
                     <MenuLink

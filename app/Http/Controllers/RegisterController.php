@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
+use App\Models\ProfilePelanggan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,12 +20,12 @@ class RegisterController extends Controller
         $request->validate([
             'email' =>  "required|email|unique:users,email",
             'password' =>  "required|string|min:6|string",
-            'no_ktp' =>  "required|numeric|min:16|unique:pelanggans,no_ktp",
+            'no_ktp' =>  "required|numeric|min:16|unique:profile_pelanggans,no_ktp",
             'nama_pelanggan' =>  "required|string",
             'alamat' =>  "required|string",
             'kecamatan' =>  "required|string",
             'foto' =>  "required|mimes:png,jpg,jpeg",
-            'no_telp' =>  "required|numeric|min:13|unique:pelanggans,no_telp",
+            'no_telp' =>  "required|numeric|min:13|unique:profile_pelanggans,no_telp",
         ]);
         $foto = $request->file('foto') ? $request->file('foto')->store('Foto') : null;
         $user = User::create([
@@ -33,16 +34,16 @@ class RegisterController extends Controller
             'password' => bcrypt($request->password),
         ]);
         $user->assignRole('pelanggan');
-        $kdPelanggan = 'P/0' . Pelanggan::count() + 1 . '/D/' . now()->format('ymd');
+        $kdPelanggan = 'P/0' . ProfilePelanggan::count() + 1 . '/D/' . now()->format('ymd');
 
-        $pelanggan = Pelanggan::create([
+        $pelanggan = ProfilePelanggan::create([
             'kd_pelanggan' => $kdPelanggan,
             'no_ktp' => $request->no_ktp,
             'nama_pelanggan' => $request->nama_pelanggan,
             'alamat' => $request->alamat,
             'kecamatan' => $request->kecamatan,
             'foto' => $foto,
-            'pelanggan_id' => $user->id,
+            'user_id' => $user->id,
             'no_telp' => $request->no_telp,
         ]);
         Auth::login($user);
