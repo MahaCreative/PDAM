@@ -513,7 +513,7 @@ export default function Show(props) {
                         </tr>
                     </tbody>
                 </table>
-                {tagihan.status_pembayaran === "Belum Lunas" ? (
+                {tagihan.status_pembayaran === "belum lunas" ? (
                     <button
                         onClick={bayarHandler}
                         className="my-3 py-2 px-4 text-white bg-blue-600 rounded-md"
