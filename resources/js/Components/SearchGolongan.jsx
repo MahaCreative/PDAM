@@ -11,9 +11,7 @@ export default function SearchGolongan({ title, errors, model, ...props }) {
 
     const fetchData = async () => {
         try {
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/get-golongan?cari=${search}`
-            );
+            const response = await fetch(`/api/get-golongan?cari=${search}`);
             const result = await response.json();
             setData(result);
         } catch (error) {

@@ -13,9 +13,7 @@ export default function SearchPemasanganBaru({ ...props }) {
 
     const fetchData = async () => {
         try {
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/get-pemasangan?cari=${search}`
-            );
+            const response = await fetch(`/api/get-pemasangan?cari=${search}`);
             const result = await response.json();
             setData(result);
         } catch (error) {

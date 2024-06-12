@@ -18,7 +18,7 @@ export default function SearchKelompok({
     const fetchData = async () => {
         try {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/get-kelompok?cari=${search}&golongan=${dataGolongan}`
+                `/api/get-kelompok?cari=${search}&golongan=${dataGolongan}`
             );
             const result = await response.json();
             setData(result);
