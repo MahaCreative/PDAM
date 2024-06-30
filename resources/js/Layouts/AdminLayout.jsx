@@ -330,7 +330,9 @@ export default function AdminLayout({ children, title, links }) {
                 </p>
                 <p>
                     Powered by{" "}
-                    <span className="text-blue-400 dark:text-white">ANu</span>
+                    <span className="text-blue-400 dark:text-white">
+                        Musdalifah
+                    </span>
                 </p>
             </div>
         </div>
