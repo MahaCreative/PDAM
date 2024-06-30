@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import Swal from "sweetalert2";
 import "moment/min/moment-with-locales";
+import Input from "@/Components/Input";
 export default function Index(props) {
     const periode = props.periode;
     var date = moment(new Date()).toDate();
@@ -169,13 +170,23 @@ export default function Index(props) {
                 }
             });
     };
-
+    const [modalTambah, setModalTambah] = useState(false);
+    const [params, setParams] = useState({
+        bulan: "",
+        tahun: moment(new Date()).format("YYYY"),
+    });
     const tambah = () => {
+        setModalTambah(true);
+    };
+    const submitHandler = (e) => {
+        e.preventDefault();
         swalWithBootstrapButtons
             .fire({
                 title:
                     "Apakah anda yakin membuat periode tagihan " +
-                    moment(new Date()).format("MMMM YYYY") +
+                    params.bulan +
+                    " " +
+                    params.tahun +
                     " ?",
                 text: "Membuat periode tagihan akan menambahkan pencatatan meter dan tagihan pelanggan secara default",
                 icon: "warning",
@@ -188,9 +199,9 @@ export default function Index(props) {
                 if (result.isConfirmed) {
                     router.delete(
                         route("admin.create-periode-tagihan", {
-                            bulan: bulan,
+                            bulan: params.bulan,
                             // bulan: "juni",
-                            tahun: moment(new Date()).format("YYYY"),
+                            tahun: params.tahun,
                         }),
 
                         {
@@ -200,7 +211,9 @@ export default function Index(props) {
                                     title: "Success",
                                     text:
                                         "Berhasil membuat periode tagihan " +
-                                        moment(new Date()).format("MMMM YYYY"),
+                                        params.bulan +
+                                        " " +
+                                        params.tahun,
                                     icon: "success",
                                     showClass: {
                                         popup: `
@@ -247,7 +260,45 @@ export default function Index(props) {
     return (
         <div className="py-6">
             {/* Modal */}
-
+            <Modal
+                title={"Buat Periode Tagihan"}
+                open={modalTambah}
+                setOpen={() => setModalTambah(false)}
+            >
+                <div className="flex flex-col gap-3">
+                    <select
+                        className="w-full"
+                        onChange={(e) =>
+                            setParams({ ...params, bulan: e.target.value })
+                        }
+                    >
+                        <option value="januari">Januari</option>
+                        <option value="februari">Februari</option>
+                        <option value="maret">Maret</option>
+                        <option value="april">April</option>
+                        <option value="mei">Mei</option>
+                        <option value="juni">Juni</option>
+                        <option value="juli">Juli</option>
+                        <option value="agustus">Agustus</option>
+                        <option value="september">September</option>
+                        <option value="oktober">Oktober</option>
+                        <option value="november">November</option>
+                        <option value="desember">Desember</option>
+                    </select>
+                    <Input
+                        title={"Tahun Periode"}
+                        value={params.tahun}
+                        disabled
+                    />
+                    <button
+                        onClick={submitHandler}
+                        className="btn-primary flex gap-3 leading-none"
+                    >
+                        <Add color="inherit" fontSize="inherit" />
+                        Buat Periode Tagihan
+                    </button>
+                </div>
+            </Modal>
             <div className="my-3 flex justify-between items-center">
                 <button
                     onClick={() => tambah()}

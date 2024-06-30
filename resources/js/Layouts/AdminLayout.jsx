@@ -206,11 +206,7 @@ export default function AdminLayout({ children, title, links }) {
                                 >
                                     Info PDAM
                                 </MenuSidebar.MenuLink>
-                                <MenuSidebar.MenuLink
-                                    href={route("admin.berita")}
-                                >
-                                    Berita
-                                </MenuSidebar.MenuLink>
+
                                 <MenuSidebar.MenuLink
                                     href={route("admin.galery")}
                                 >

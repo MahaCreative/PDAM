@@ -55,33 +55,6 @@ export default function Layout({ children }) {
                     >
                         Simulasi
                     </Link>
-                    <Link
-                        as="div"
-                        href={route("info-pdam")}
-                        className={`${
-                            route().current("info-pdam") ? "text-blue-500" : ""
-                        } py-1 px-3 hover:bg-slate-950 hover:text-white text-xl my-3 hover:cursor-pointer`}
-                    >
-                        Info PDAM
-                    </Link>
-                    <Link
-                        as="div"
-                        href={route("berita")}
-                        className={`${
-                            route().current("berita") ? "text-blue-500" : ""
-                        } py-1 px-3 hover:bg-slate-950 hover:text-white text-xl my-3 hover:cursor-pointer`}
-                    >
-                        Berita
-                    </Link>
-                    <Link
-                        as="div"
-                        href={route("galery")}
-                        className={`${
-                            route().current("galery") ? "text-blue-500" : ""
-                        } py-1 px-3 hover:bg-slate-950 hover:text-white text-xl my-3 hover:cursor-pointer`}
-                    >
-                        Galery
-                    </Link>
                 </div>
             </div>
             {children}
