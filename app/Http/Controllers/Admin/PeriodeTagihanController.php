@@ -52,6 +52,22 @@ class PeriodeTagihanController extends Controller
 
     public function store(Request $request)
     {
+        $bulan = [
+            'januari' => '01',
+            'februari' => '02',
+            'maret' => '03',
+            'april' => '04',
+            'mei' => '05',
+            'juni' => '06',
+            'juli' => '07',
+            'agustus' => '08',
+            'september' => '09',
+            'oktober' => '10',
+            'november' => '11',
+            'desember' => '12'
+        ];
+
+        $bulanAngka = $bulan[strtolower($request->bulan)];
         $cek = PeriodeTagihan::where('periode_tagihan', '=', \Str::lower($request->bulan) . " " . $request->tahun)->first();
         if ($cek) {
             return redirect()->back()->withErrors(['message' => 'Periode tagihan ' . \Str::lower($request->bulan) . " " . $request->tahun . ' telah dibuat sebelumnya, anda tidak lagi bisa menambahkan periode yang sama']);
@@ -74,7 +90,7 @@ class PeriodeTagihanController extends Controller
                 "meter_awal" => '0',
                 "meter_akhir" => '0',
                 "meter_pemakaian" => '0',
-                "creeated_at" => $request->tahun . "-" . $request->bulan . +'-01 12:00:00'
+                "created_at" => $request->tahun . "-" . $bulanAngka . '-01 12:00:00'
             ]);
             TagihanBulanan::create([
                 'pencatatan_meter_id' => $pencatatan->id,
@@ -94,7 +110,7 @@ class PeriodeTagihanController extends Controller
                 "adm" => $adm = $item->harga_tarif->adm,
                 'denda' => '0',
                 "total_tagihan" => $tarif  + $adm,
-                "creeated_at" => $request->tahun . "-" . $request->bulan . +'-01 12:00:00'
+                "created_at" => $request->tahun . "-" . $bulanAngka . '-01 12:00:00'
             ]);
         }
     }
