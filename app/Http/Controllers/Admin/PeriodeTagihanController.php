@@ -74,8 +74,7 @@ class PeriodeTagihanController extends Controller
         }
         $latestPeriode = PeriodeTagihan::latest()->first();
 
-
-
+        $periodeCount = PeriodeTagihan::count();
         $periode = PeriodeTagihan::create([
             'kode_periode' => \Str::lower($request->bulan) . "" . $request->tahun,
             'bulan' => \Str::lower($request->bulan),
@@ -83,6 +82,7 @@ class PeriodeTagihanController extends Controller
             'periode_tagihan' =>  \Str::lower($request->bulan) . " " . $request->tahun
         ]);
         $meteranPelanggan = MeteranPelanggan::with('harga_tarif')->latest()->get();
+
         foreach ($meteranPelanggan as $item) {
             $pencatatan =  PencatatanMeter::create([
                 "periode_tagihan_id" => $periode->id,
@@ -104,15 +104,30 @@ class PeriodeTagihanController extends Controller
                 "pemakaian_30" => '0',
                 "pemakaian_30_keatas" => '0',
                 "tarif_pemakaian_10" => $tarif = $item->harga_tarif->tarif1,
-                "tarif_pemakaian_20" => $item->harga_tarif->tarif1,
-                "tarif_pemakaian_30" => $item->harga_tarif->tarif1,
-                "tarif_pemakaian_30_keatas" => $item->harga_tarif->tarif1,
+                "tarif_pemakaian_20" => 0,
+                "tarif_pemakaian_30" => 0,
+                "tarif_pemakaian_30_keatas" => 0,
                 "adm" => $adm = $item->harga_tarif->adm,
                 'denda' => '0',
                 "total_tagihan" => $tarif  + $adm,
                 "created_at" => $request->tahun . "-" . $bulanAngka . '-01 12:00:00'
             ]);
         }
+        if ($periodeCount > 0) {
+            $tagihan = TagihanBulanan::with(['meteran' => function ($q) {
+                $q->with('harga_tarif');
+            }])->whereNot('periode_tagihan_id', $periode->id)->where('status_pembayaran', '=', 'belum lunas')->get();
+            foreach ($tagihan as $item) {
+                $item->update([
+                    'status_tunggakan' => 'menunggak',
+                    'denda' => $item->meteran->harga_tarif->denda,
+                    'total_tagihan' => $item->total_tagihan + $item->meteran->harga_tarif->denda
+                ]);
+                // $item->status_tunggakan = 'menunggak';
+                // $item->save();
+            }
+        }
+        return redirect()->back();
     }
 
     public function delete(Request $request)

@@ -159,6 +159,7 @@ Route::middleware(['auth',])->group(function () {
     Route::get('admin/cetak-meteran-pelanggan', [MeteranPelanggan::class, 'cetak'])->name('admin.cetak-meteran-pelanggan');
     Route::post('admin/create-meteran-pelanggan', [MeteranPelanggan::class, 'store'])->name('admin.create-meteran-pelanggan');
     Route::post('admin/update-meteran-pelanggan', [MeteranPelanggan::class, 'update'])->name('admin.update-meteran-pelanggan');
+    Route::post('admin/proses-meteran-pelanggan', [MeteranPelanggan::class, 'proses'])->name('admin.proses-meteran-pelanggan');
     Route::delete('admin/delete-meteran-pelanggan', [MeteranPelanggan::class, 'delete'])->name('admin.delete-meteran-pelanggan');
 
     Route::get('admin/periode-tagihan', [PeriodeTagihanController::class, 'index'])->name('admin.periode-tagihan');

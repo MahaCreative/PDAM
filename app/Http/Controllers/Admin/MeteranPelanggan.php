@@ -90,4 +90,24 @@ class MeteranPelanggan extends Controller
         $meteran = ModelsMeteranPelanggan::findOrFail($request->id);
         $meteran->delete();
     }
+
+    public function proses()
+    {
+        $meteran = ModelsMeteranPelanggan::withCount(['tagihan' => function ($q) {
+            $q->where('status_tunggakan', '=', 'menunggak');
+        }])->get();
+        foreach ($meteran as $item) {
+            if ($item->tagihan_count < 3) {
+                $item->status_meteran = 'aktif';
+                $item->save();
+            } else if ($item->tagihan_count >= 3) {
+                $item->status_meteran = 'pencabutan sementara';
+                $item->save();
+            } else if ($item->tagihan_count >= 5) {
+                $item->status_meteran = 'non aktif';
+                $item->save();
+            }
+        }
+        return redirect()->back()->with('success', 'Proses Berhasil');
+    }
 }

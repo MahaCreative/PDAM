@@ -123,14 +123,7 @@ export default function Show(props) {
                             Catat Meteran
                         </Link>
                     )}
-                    {row.status_pembayaran !== "lunas" ? (
-                        <button
-                            onClick={() => deleteHandler(row.id)}
-                            className="btn-danger"
-                        >
-                            Delete
-                        </button>
-                    ) : (
+                    {row.status_pembayaran == "lunas" && (
                         <button
                             onClick={() => print(row.id)}
                             className="btn-primary"

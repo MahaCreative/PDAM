@@ -1,7 +1,13 @@
 import Modal from "@/Components/Modal";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Link, router } from "@inertiajs/react";
-import { Add, Print, Refresh, Water } from "@mui/icons-material";
+import {
+    Add,
+    Print,
+    ProductionQuantityLimitsSharp,
+    Refresh,
+    Water,
+} from "@mui/icons-material";
 import { Tooltip, debounce } from "@mui/material";
 import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
@@ -212,6 +218,71 @@ export default function Index(props) {
             sampai_tanggal: "",
         });
     };
+    const prosesStatusMeteran = () => {
+        swalWithBootstrapButtons
+            .fire({
+                title: "Update Statu",
+                text: "Anda akan mengupdate status meteran pelanggan?, jika pelanggan memiliki tunggakan tagihan sebanyak 3 kali maka status meteran pelanggan akan diupdate menjadi pencabutan sementara sedangkan jika lebih dari 5 kali maka status akan diubah menjadi non aktif",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya Yakin",
+                cancelButtonText: "Batalkan",
+                reverseButtons: true,
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    router.post(
+                        route("admin.proses-meteran-pelanggan"),
+
+                        {
+                            preserveScroll: true,
+                            onSuccess: () => {
+                                Swal.fire({
+                                    title: "Success",
+                                    text: "Berhasil mengupdate status meteran pelanggan",
+                                    icon: "success",
+                                    showClass: {
+                                        popup: `
+                                animate__animated
+                                animate__fadeInUp
+                                animate__faster
+                                `,
+                                    },
+                                    hideClass: {
+                                        popup: `
+                                    animate__animated
+                                    animate__fadeOutDown
+                                    animate__faster
+                                    `,
+                                    },
+                                });
+                            },
+                            onError: () => {
+                                Swal.fire({
+                                    title: "Upss",
+                                    text: "Gagal mengupdate status meteran pelanggan",
+                                    icon: "error",
+                                    showClass: {
+                                        popup: `
+                                animate__animated
+                                animate__fadeInUp
+                                animate__faster
+                                `,
+                                    },
+                                    hideClass: {
+                                        popup: `
+                                    animate__animated
+                                    animate__fadeOutDown
+                                    animate__faster
+                                    `,
+                                    },
+                                });
+                            },
+                        }
+                    );
+                }
+            });
+    };
     return (
         <div className="py-6">
             {/* Modal */}
@@ -319,6 +390,18 @@ export default function Index(props) {
                             <Add color="inherit" fontSize="inherit" />
                         </p>
                         <p>Tambah</p>
+                    </button>
+                    <button
+                        onClick={() => prosesStatusMeteran()}
+                        className=" btn-warning flex items-center"
+                    >
+                        <p className="leading-none btn-warning">
+                            <ProductionQuantityLimitsSharp
+                                color="inherit"
+                                fontSize="inherit"
+                            />
+                        </p>
+                        <p>Proses Status Meteran</p>
                     </button>
                     <button onClick={cetakHandler} className="flex gap-3">
                         <p className="leading-none btn-success">

@@ -163,6 +163,7 @@ class PencatatanMeterController extends Controller
             'tarif_pemakaian_30_keatas' => $request->tarif4,
             'denda' =>  $denda,
             'total_tagihan' => $request->total_biaya + $denda,
+            'pembayaran_aktif' => 'aktif'
         ]);
     }
 }

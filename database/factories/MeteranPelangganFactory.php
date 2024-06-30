@@ -33,10 +33,10 @@ class MeteranPelangganFactory extends Factory
             "no_meteran" => rand(111111, 9999999),
             "no_sambungan" => rand(111111, 9999999),
             "nama_golongan" => $golongan[rand(0, Golongan::count() - 1)]->nama,
-            "nama_kelompok" => $kelompok[rand(0, Kelompok::count() - 1)]->nama,
+            "nama_kelompok" => $nama_kelompok = $kelompok[rand(0, Kelompok::count() - 1)]->nama,
 
             'tanggal_pemasangan' => $this->faker->dateTimeBetween('-2 years', 'now'),
-            "harga_tarif_per_meter_id" => rand(1, HargaTarifPerMeter::count() - 1),
+            "harga_tarif_per_meter_id" => HargaTarifPerMeter::where('kelompok', $nama_kelompok)->first()->id,
             "status_meteran" => $status[0],
         ];
     }
