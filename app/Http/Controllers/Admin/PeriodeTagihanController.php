@@ -74,6 +74,7 @@ class PeriodeTagihanController extends Controller
                 "meter_awal" => '0',
                 "meter_akhir" => '0',
                 "meter_pemakaian" => '0',
+                "creeated_at" => $request->tahun . "-" . $request->bulan . +'-01 12:00:00'
             ]);
             TagihanBulanan::create([
                 'pencatatan_meter_id' => $pencatatan->id,
@@ -93,6 +94,7 @@ class PeriodeTagihanController extends Controller
                 "adm" => $adm = $item->harga_tarif->adm,
                 'denda' => '0',
                 "total_tagihan" => $tarif  + $adm,
+                "creeated_at" => $request->tahun . "-" . $request->bulan . +'-01 12:00:00'
             ]);
         }
     }
