@@ -168,7 +168,7 @@ Route::middleware(['auth',])->group(function () {
     Route::delete('admin/create-periode-tagihan', [PeriodeTagihanController::class, 'store'])->name('admin.create-periode-tagihan');
 
     Route::get('admin/tagihan-bulanan', [TagihanPemakaianAirController::class, 'index'])->name('admin.tagihan-bulanan');
-    // Route::get('admin/cetak-tagihan-bulanan', [TagihanPemakaianAirController::class, 'cetak'])->name('admin.cetak-tagihan-bulanan');
+    Route::get('admin/cetak-tagihan-bulanan', [TagihanPemakaianAirController::class, 'cetak'])->name('admin.cetak-tagihan-bulanan');
     Route::get('admin/show-tagihan-bulanan-saya/{id}', [PembayaranTagihanPelanggan::class, 'show'])->name('admin.show-tagihan-bulanan-saya');
     Route::post('admin-konfirmasi-pembayaran-pelanggan', [PembayaranTagihanPelanggan::class, 'konfirmasi'])->name('admin.konfirmasi-pembayaran-pelanggan');
     // Route::get('admin/history-pembayaran-tagihan', [PembayaranTagihanPelanggan::class, 'history_pembayaran'])->name('admin.history_pembayaran');

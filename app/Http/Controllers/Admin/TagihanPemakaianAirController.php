@@ -60,8 +60,7 @@ class TagihanPemakaianAirController extends Controller
     public function cetak(Request $request)
     {
 
-        $tahun = now()->format('Y');
-        $bulan = now()->format('M');
+
 
         $query = TagihanBulanan::query()->with(['meteran', 'pemakaian' => function ($q) {
             $q->with('periode');

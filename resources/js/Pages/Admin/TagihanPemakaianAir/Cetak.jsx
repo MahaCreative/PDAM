@@ -86,5 +86,5 @@ export default function Cetak(props) {
 }
 
 Cetak.layout = (page) => (
-    <CetakLayout title={"Laporan Tagihan Pemakaian Air"} />
+    <CetakLayout children={page} title={"Laporan Tagihan Pemakaian Air"} />
 );

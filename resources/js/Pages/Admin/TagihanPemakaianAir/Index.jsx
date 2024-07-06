@@ -143,7 +143,7 @@ export default function Index(props) {
     );
     useEffect(() => reload(params), [params]);
     const cetakHandler = () => {
-        router.get(route("admin.cetak-tagihan-bulanan"), params);
+        router.get(route("admin.cetak-tagihan-bulanan"), { ...params });
     };
     return (
         <div className="py-6">
