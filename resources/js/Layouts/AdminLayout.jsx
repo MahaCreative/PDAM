@@ -102,6 +102,11 @@ export default function AdminLayout({ children, title, links }) {
                                 }
                             >
                                 <MenuSidebar.MenuLink
+                                    href={route("admin.data-petugas")}
+                                >
+                                    Data Petugas
+                                </MenuSidebar.MenuLink>
+                                <MenuSidebar.MenuLink
                                     href={route("admin.golongan-kelompok")}
                                 >
                                     Golongan dan Kelompok
