@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pelanggan;
 use App\Http\Controllers\Controller;
 use App\Models\JenisPengaduan;
 use App\Models\Pengaduan;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PengaduanController extends Controller
@@ -24,7 +25,10 @@ class PengaduanController extends Controller
 
     public function store(Request $request)
     {
-
+        $get_petugas_lapangan = User::with(['roles', 'petugas'])->whereHas('roles', function ($query) {
+            $query->where('name', 'petugas lapangan');
+        })->inRandomOrder()->limit(1)->get();
+        // dd($get_petugas_lapangan[0]->petugas->no_hp);
         if (
             $request->langtitude == "" or
             $request->longtitude == ""
@@ -40,16 +44,16 @@ class PengaduanController extends Controller
             "pengaduan" => "required|string|min:20",
             "foto" => "required|image|mimes:png,jpeg,jpg",
         ]);
-        $checkPengaduan = Pengaduan::where('user_id', $request->user()->id)->whereDate('tanggal_pengaduan', now())->latest()->first();
-        if ($checkPengaduan) {
-            return redirect()->back()->withErrors(['message' => 'Anda sudah melakukan pengaduan silahkan menunggu pengaduan anda diproses terlebih dahulu.']);
-        }
+
         $attr['user_id'] = $request->user()->id;
         $attr["kd_pengaduan"] = now()->format('dmy') . Pengaduan::count() + 1;
         $attr["tanggal_pengaduan"] = now();
         $attr['langtitude'] = $request->langtitude;
         $attr['longtitude'] = $request->longtitude;
         $attr['foto'] = $request->file('foto')->store('FotoPengaduan');
+
+        $attr['nama_petugas_menangani'] = $get_petugas_lapangan[0]->petugas->nama;
+        $attr['nomor_handphone_petugas'] = $get_petugas_lapangan[0]->petugas->no_hp;
         $pengaduan = Pengaduan::create($attr);
         return redirect()->route('admin.show-pengaduan-pelanggan', $attr['kd_pengaduan']);
     }

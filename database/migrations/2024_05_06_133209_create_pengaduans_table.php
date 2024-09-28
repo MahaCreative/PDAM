@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('hasil_lapangan')->nullable();
             $table->string('status')->default('belum di proses');
             $table->string('nama_petugas_menangani')->nullable();
+            $table->string('nomor_handphone_petugas')->nullable();
             $table->string('status_konfirmasi')->default('menunggu konfirmasi');
             $table->timestamps();
         });

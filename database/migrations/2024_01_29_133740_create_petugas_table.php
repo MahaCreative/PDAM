@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('petugas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('nip')->nullable();
             $table->string('nama');
             $table->string('no_hp');
             $table->string('foto')->default('Image/preview_image.jpg');

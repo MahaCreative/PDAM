@@ -13,6 +13,7 @@ export default function Index(props) {
     const slide = props.slide;
     const galery = props.galery;
     const berita = props.berita;
+    const pengaduan = props.pengaduan;
     const info = props.info;
     const spanStyle = {
         padding: "10px",
@@ -237,6 +238,61 @@ export default function Index(props) {
                             </p>
                         </Link>
                     </div> */}
+                </div>
+            </div>
+            {/* info */}
+            <div className="px-3 md:px-6 lg:px-16 pt-6">
+                <div className="flex gap-x-3 justify-between items-center">
+                    <h1 className="text-blue-500 font-fira font-semibold text-lg md:text-xl lg:text-2xl">
+                        Pengaduan Terbaru
+                    </h1>
+                    <Link
+                        href={route("info-pdam")}
+                        className="text-blue-500 font-fira font-semibold text-xs"
+                    >
+                        SELENGKAPNYA{" "}
+                        <span className="p-1 bg-blue-500 text-white rounded-full">
+                            <ArrowForward fontSize="inherit" color="inherit" />
+                        </span>
+                    </Link>
+                </div>
+                <div className="slide-container my-3">
+                    <SliderCard show={info.length}>
+                        {pengaduan.map((item, index) => (
+                            <SliderCard.Item
+                                // link={route("show-info-pdam", item.slug)}
+                                key={index}
+                                image={item.foto}
+                            >
+                                <div
+                                    as="div"
+                                    className="flex justify-end items-end h-full w-full"
+                                >
+                                    <div className="bg-blue-500/50 backdrop-blur-sm w-full px-3 py-2 rounded-md">
+                                        <div className="">
+                                            <p className="text-white font-semibold text-xs">
+                                                Nama Pelapor:{" "}
+                                                <span className="capitalize">
+                                                    {" "}
+                                                    {item.nama_pelapor}
+                                                </span>
+                                            </p>
+                                            <p>{item.pengaduan}</p>
+                                            <p className="capitalize text-xs">
+                                                Status: {item.status}
+                                            </p>
+                                            <p className="text-xs font-extralight text-white">
+                                                Tanggal Pengaduan:{" "}
+                                                {moment(item.created_at).format(
+                                                    "ll"
+                                                )}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </SliderCard.Item>
+                        ))}
+                    </SliderCard>
                 </div>
             </div>
             {/* info */}

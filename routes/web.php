@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\BankController;
 use App\Http\Controllers\Admin\BeritaController;
 use App\Http\Controllers\Admin\BuktiPembayaranPemasanganBaru;
+use App\Http\Controllers\Admin\DataPetugasController;
 use App\Http\Controllers\Admin\GaleryController;
 use App\Http\Controllers\Admin\GolonganKelompokController;
 use App\Http\Controllers\Admin\HargaTarifController;
@@ -98,6 +99,10 @@ Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'
 Route::get('admin/dashboard', [DashboardController::class, 'dashboard_admin'])->name('admin.dashboard');
 
 Route::middleware(['auth',])->group(function () {
+    Route::get('data-petugas', [DataPetugasController::class, 'index'])->name('admin.data-petugas');
+    Route::post('simpan-data-petugas', [DataPetugasController::class, 'store'])->name('admin.post-data-petugas');
+
+    Route::delete('data-petugas', [DataPetugasController::class, 'delete'])->name('admin.delete-data-petugas');
 
     Route::get('Setting-apps', [SettingAppsController::class, 'index'])->name('admin.setting-apps');
     Route::post('Setting-apps/update', [SettingAppsController::class, 'update'])->name('admin.setting-apps-update');

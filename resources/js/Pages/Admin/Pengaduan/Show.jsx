@@ -37,9 +37,11 @@ export default function Show(props) {
         popupAnchor: [2, -40],
     });
     const zoom = 25;
+    console.log(pengaduan);
     const { data, setData, post, errors } = useForm({
         id: pengaduan.id,
-        nama_petugas_menangani: auth.user.name,
+        nama_petugas_menangani: pengaduan.nama_petugas_menangani,
+        no_hp_petugas: pengaduan.nomor_handphone_petugas,
         status_fakta: pengaduan.status_fakta ? pengaduan.status_fakta : "",
         hasil_lapangan: pengaduan.hasil_lapangan
             ? pengaduan.hasil_lapangan
@@ -343,6 +345,12 @@ export default function Show(props) {
                             : " -"}
                     </div>
                     <div className="py-1 px-3 bg-blue-200  rounded-md font-semibold my-2">
+                        Kontak Petugas :{" "}
+                        {pengaduan.nomor_handphone_petugas
+                            ? pengaduan.nomor_handphone_petugas
+                            : " -"}
+                    </div>
+                    <div className="py-1 px-3 bg-blue-200  rounded-md font-semibold my-2">
                         Tanggal Proses Pengaduan:
                         {pengaduan.tanggal_proses_pengaduan
                             ? moment(pengaduan.tanggal_proses_pengaduan).format(
@@ -369,109 +377,134 @@ export default function Show(props) {
                         </p>
                     </div>
 
-                    {pengaduan.status_konfirmasi == "terima" && (
-                        <div className="my-3 py-1 px-3 rounded-md shadow-md shadow-gray-500/50">
-                            <h3 className="font-semibold text-blue-500">
-                                Form Proses Pengaduan
-                            </h3>
-                            <form onSubmit={prosesPengaduan}>
-                                <Input
-                                    classname={"hidden"}
-                                    value={data.id}
-                                    onChange={(e) =>
-                                        setData({
-                                            ...data,
-                                            id: pengaduan.id,
-                                        })
-                                    }
-                                />
-                                <Input
-                                    title={"Nama Petugas"}
-                                    onChange={(e) =>
-                                        setData({
-                                            ...data,
-                                            nama_petugas_menangani:
-                                                e.target.value,
-                                        })
-                                    }
-                                    disabled
-                                    value={data.nama_petugas_menangani}
-                                />
-                                <Input
-                                    title={"Tanggal Proses Pengaduan"}
-                                    onChange={(e) =>
-                                        setData({
-                                            ...data,
-                                            tanggal_proses: e.target.value,
-                                        })
-                                    }
-                                    disabled
-                                    value={data.tanggal_proses}
-                                />
-                                <Select
-                                    title="Status Di Lapangan"
-                                    errors={errors.status_fakta}
-                                    onChange={(e) =>
-                                        setData({
-                                            ...data,
-                                            status_fakta: e.target.value,
-                                        })
-                                    }
-                                >
-                                    <option value={""} disabled>
-                                        {pengaduan.status_fakta == null
-                                            ? "Pilih Status Fakta Di Lapangan"
-                                            : pengaduan.status_fakta == "ya"
-                                            ? "Sesuai dengan pengaduan pelanggan"
-                                            : "Tidak sesuai dengan pengaduan pelanggan"}
-                                    </option>
-                                    <option value={"ya"}>
-                                        Sesuai dengan pengaduan pelanggan
-                                    </option>
-                                    <option value={"tidak"}>
-                                        Tidak sesuai dengan pengaduan pelanggan
-                                    </option>
-                                </Select>
-                                <Select
-                                    title="Status Proses Pengaduan"
-                                    errors={errors.status}
-                                    onChange={(e) =>
-                                        setData({
-                                            ...data,
-                                            status: e.target.value,
-                                        })
-                                    }
-                                >
-                                    <option value={""} disabled>
-                                        {pengaduan.status
-                                            ? pengaduan.status
-                                            : "Pilih Proses Pengaduan"}
-                                    </option>
-                                    <option value={"dihentikan"}>
-                                        Dihentikan
-                                    </option>
-                                    <option value={"diperbaiki"}>
-                                        Diperbaiki
-                                    </option>
-                                    <option value={"selesai"}>Selesai</option>
-                                </Select>
-                                <Input
-                                    title={
-                                        "Deskripsi Hasil dan Penyelesaian Pengaduan"
-                                    }
-                                    errors={errors.hasil_lapangan}
-                                    onChange={(e) =>
-                                        setData({
-                                            ...data,
-                                            hasil_lapangan: e.target.value,
-                                        })
-                                    }
-                                />
-                                <button className="my-3 btn-primary">
-                                    Update Proses{" "}
-                                </button>
-                            </form>
-                        </div>
+                    {(auth.roles == "admin" ||
+                        auth.roles === "petugas lapangan") && (
+                        <>
+                            {pengaduan.status_konfirmasi == "terima" && (
+                                <div className="my-3 py-1 px-3 rounded-md shadow-md shadow-gray-500/50">
+                                    <h3 className="font-semibold text-blue-500">
+                                        Form Proses Pengaduan
+                                    </h3>
+                                    <form onSubmit={prosesPengaduan}>
+                                        <Input
+                                            classname={"hidden"}
+                                            value={data.id}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    id: pengaduan.id,
+                                                })
+                                            }
+                                        />
+                                        <Input
+                                            title={"Nama Petugas"}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    nama_petugas_menangani:
+                                                        e.target.value,
+                                                })
+                                            }
+                                            disabled
+                                            value={data.nama_petugas_menangani}
+                                        />
+                                        <Input
+                                            title={"Nomor Hp Petugas"}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    no_hp_petugas:
+                                                        e.target.value,
+                                                })
+                                            }
+                                            disabled
+                                            value={data.no_hp_petugas}
+                                        />
+                                        <Input
+                                            title={"Tanggal Proses Pengaduan"}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    tanggal_proses:
+                                                        e.target.value,
+                                                })
+                                            }
+                                            disabled
+                                            value={data.tanggal_proses}
+                                        />
+                                        <Select
+                                            title="Status Di Lapangan"
+                                            errors={errors.status_fakta}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    status_fakta:
+                                                        e.target.value,
+                                                })
+                                            }
+                                        >
+                                            <option value={""} disabled>
+                                                {pengaduan.status_fakta == null
+                                                    ? "Pilih Status Fakta Di Lapangan"
+                                                    : pengaduan.status_fakta ==
+                                                      "ya"
+                                                    ? "Sesuai dengan pengaduan pelanggan"
+                                                    : "Tidak sesuai dengan pengaduan pelanggan"}
+                                            </option>
+                                            <option value={"ya"}>
+                                                Sesuai dengan pengaduan
+                                                pelanggan
+                                            </option>
+                                            <option value={"tidak"}>
+                                                Tidak sesuai dengan pengaduan
+                                                pelanggan
+                                            </option>
+                                        </Select>
+                                        <Select
+                                            title="Status Proses Pengaduan"
+                                            errors={errors.status}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    status: e.target.value,
+                                                })
+                                            }
+                                        >
+                                            <option value={""} disabled>
+                                                {pengaduan.status
+                                                    ? pengaduan.status
+                                                    : "Pilih Proses Pengaduan"}
+                                            </option>
+                                            <option value={"dihentikan"}>
+                                                Dihentikan
+                                            </option>
+                                            <option value={"diperbaiki"}>
+                                                Diperbaiki
+                                            </option>
+                                            <option value={"selesai"}>
+                                                Selesai
+                                            </option>
+                                        </Select>
+                                        <Input
+                                            title={
+                                                "Deskripsi Hasil dan Penyelesaian Pengaduan"
+                                            }
+                                            errors={errors.hasil_lapangan}
+                                            onChange={(e) =>
+                                                setData({
+                                                    ...data,
+                                                    hasil_lapangan:
+                                                        e.target.value,
+                                                })
+                                            }
+                                        />
+                                        <button className="my-3 btn-primary">
+                                            Update Proses{" "}
+                                        </button>
+                                    </form>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>
